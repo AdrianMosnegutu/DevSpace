@@ -41,7 +41,7 @@ export default function DeletePostDialog({ postId, closeDropdown }: Props) {
         "You successfully deleted a post from DevSpace!",
       );
 
-      router.refresh();
+      setTimeout(router.refresh, 100);
     } catch (error) {
       errorToast("Post could not be deleted", error);
     } finally {

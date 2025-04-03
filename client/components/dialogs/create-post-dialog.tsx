@@ -23,7 +23,7 @@ export default function CreatePostDialog() {
         "You successfully uploaded yor post to DevSpace!",
       );
 
-      router.refresh();
+      setTimeout(router.refresh, 100);
     } catch (error) {
       errorToast("Post could not be created!", error);
     } finally {

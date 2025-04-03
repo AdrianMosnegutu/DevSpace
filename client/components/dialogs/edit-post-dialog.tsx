@@ -35,7 +35,7 @@ export default function EditPostDialog({
         "You successfully edited a post!",
       );
 
-      router.refresh();
+      setTimeout(router.refresh, 100);
     } catch (error) {
       errorToast("Post could not be edited!", error);
     } finally {
