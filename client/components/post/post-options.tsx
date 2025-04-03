@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, Pencil } from "lucide-react";
+import { EllipsisVertical } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -12,16 +12,15 @@ import {
 } from "../ui/dropdown-menu";
 import { useState } from "react";
 import DeletePostDialog from "../dialogs/delete-post-dialog";
+import EditPostDialog from "../dialogs/edit-post-dialog";
+import { TPostResponse } from "common";
 
-interface Props {
-  postId: string;
-}
-
-export default function PostOptions({ postId }: Props) {
+export default function PostOptions(post: TPostResponse) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+      {/* The post options button */}
       <DropdownMenuTrigger asChild>
         <Button variant="ghost">
           <EllipsisVertical />
@@ -33,17 +32,24 @@ export default function PostOptions({ postId }: Props) {
 
         <DropdownMenuSeparator />
 
-        <DropdownMenuItem>
-          <Pencil />
-          Edit
+        {/* Edit post button */}
+        <DropdownMenuItem
+          onSelect={(event) => event.preventDefault()}
+          className="p-0"
+        >
+          <EditPostDialog
+            {...post}
+            closeDropdown={() => setDropdownOpen(false)}
+          />
         </DropdownMenuItem>
 
+        {/* Delete post button */}
         <DropdownMenuItem
           onSelect={(event) => event.preventDefault()}
           className="p-0"
         >
           <DeletePostDialog
-            postId={postId}
+            postId={post.id}
             closeDropdown={() => setDropdownOpen(false)}
           />
         </DropdownMenuItem>

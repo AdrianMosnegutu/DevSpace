@@ -3,7 +3,9 @@ import { CardHeader } from "../ui/card";
 import PostOptions from "./post-options";
 import { TPostResponse } from "common";
 
-export default function PostHeader({ id, title, date }: TPostResponse) {
+export default function PostHeader(post: TPostResponse) {
+  const { title, date } = post;
+
   return (
     <CardHeader className="flex items-center gap-4">
       {/* Post title */}
@@ -15,7 +17,7 @@ export default function PostHeader({ id, title, date }: TPostResponse) {
       </time>
 
       {/* Button to open the options menu for the selected post */}
-      <PostOptions postId={id} />
+      <PostOptions {...post} />
     </CardHeader>
   );
 }

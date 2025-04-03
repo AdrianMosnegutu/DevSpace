@@ -1,5 +1,3 @@
-"use client";
-
 import RemovableTagsList from "@/components/removable-tags-list";
 import { Button } from "@/components/ui/button";
 import {
@@ -11,7 +9,6 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import {
-  BACKEND_URL,
   MAX_BODY_LENGTH,
   MAX_TAG_LENGTH,
   MAX_TITLE_LENGTH,
@@ -22,31 +19,39 @@ import { FileImage } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import PostInputField from "./post-input-field";
 import PostTextareaField from "./post-textarea-field";
-import axios from "axios";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
 
-export default function CreatePostForm() {
-  const router = useRouter();
+interface Props {
+  submitValues: (values: TPostSchema) => void;
+  title: string;
+  description?: string;
+  actionText: string;
+  defaultTitle?: string;
+  defaultBody?: string;
+  defaultTags?: string[];
+}
 
+export default function PostForm({
+  submitValues,
+  title,
+  description,
+  actionText,
+  defaultTitle,
+  defaultBody,
+  defaultTags,
+}: Props) {
   const form = useForm<TPostSchema>({
     resolver: zodResolver(postSchema),
     defaultValues: {
-      title: "",
-      body: "",
+      title: defaultTitle || "",
+      body: defaultBody || "",
       tag: "",
-      tags: [],
+      tags: defaultTags || [],
     },
   });
 
-  const { getValues, setValue, control } = form;
+  const { handleSubmit, getValues, setValue, control } = form;
   const tags = useWatch({ control, name: "tags" });
 
-  /**
-   * Removes a tag from the list of tags assigned to the post.
-   *
-   * @param tag - The name of the tag that we want to remove.
-   */
   function handleRemoveTag(tag: string) {
     setValue(
       "tags",
@@ -54,11 +59,6 @@ export default function CreatePostForm() {
     );
   }
 
-  /**
-   * Adds a tag to the list of tags assigned to the post.
-   *
-   * @param e - The keyboard event linked to the HTML input element.
-   */
   function handleAddTag(e: React.KeyboardEvent<HTMLInputElement>) {
     if (e.key === "Enter" && getValues("tag").trim()) {
       e.preventDefault();
@@ -73,36 +73,16 @@ export default function CreatePostForm() {
     }
   }
 
-  /**
-   * Creates the post and adds it to the list of total posts.
-   *
-   * @param values - The properties of the post that we are going to create.
-   */
-  function createPost(values: TPostSchema) {
-    axios
-      .post(`${BACKEND_URL}/api/posts`, values)
-      .catch((error) => console.error(error));
-
-    toast("Post was created", {
-      description: "You successfully uploaded your post to DevSpace!",
-      descriptionClassName: "!text-neutral-500",
-    });
-
-    router.refresh();
-  }
-
   return (
     <Form {...form}>
       <form
         className="flex flex-col gap-8"
-        onSubmit={form.handleSubmit(createPost)}
+        onSubmit={handleSubmit(submitValues)}
       >
         {/* Form header */}
         <DialogHeader>
-          <DialogTitle className="text-3xl font-bold">Create post</DialogTitle>
-          <DialogDescription>
-            Tell everybody about what is on your mind!
-          </DialogDescription>
+          <DialogTitle className="text-3xl font-bold">{title}</DialogTitle>
+          {description && <DialogDescription>{description}</DialogDescription>}
         </DialogHeader>
 
         {/* Input fields */}
@@ -141,12 +121,15 @@ export default function CreatePostForm() {
 
         {/* Form buttons */}
         <DialogFooter>
+          {/* Add media (videos or photos) */}
           <Button variant="secondary" type="button">
             <FileImage />
             Add media
           </Button>
+
+          {/* Save form changes */}
           <DialogClose asChild>
-            <Button type="submit">Save changes</Button>
+            <Button type="submit">{actionText}</Button>
           </DialogClose>
         </DialogFooter>
       </form>
