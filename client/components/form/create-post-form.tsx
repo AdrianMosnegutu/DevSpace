@@ -3,6 +3,7 @@
 import RemovableTagsList from "@/components/removable-tags-list";
 import { Button } from "@/components/ui/button";
 import {
+  DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -10,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Form } from "@/components/ui/form";
 import {
+  BACKEND_URL,
   MAX_BODY_LENGTH,
   MAX_TAG_LENGTH,
   MAX_TITLE_LENGTH,
@@ -20,8 +22,13 @@ import { FileImage } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
 import PostInputField from "./post-input-field";
 import PostTextareaField from "./post-textarea-field";
+import axios from "axios";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export default function CreatePostForm() {
+  const router = useRouter();
+
   const form = useForm<TPostSchema>({
     resolver: zodResolver(postSchema),
     defaultValues: {
@@ -72,7 +79,16 @@ export default function CreatePostForm() {
    * @param values - The properties of the post that we are going to create.
    */
   function createPost(values: TPostSchema) {
-    console.log(values);
+    axios
+      .post(`${BACKEND_URL}/api/posts`, values)
+      .catch((error) => console.error(error));
+
+    toast("Post was created", {
+      description: "You successfully uploaded your post to DevSpace!",
+      descriptionClassName: "!text-neutral-500",
+    });
+
+    router.refresh();
   }
 
   return (
@@ -95,27 +111,27 @@ export default function CreatePostForm() {
           <PostInputField
             control={form.control}
             name="title"
-            maxLength={MAX_TITLE_LENGTH}
             label="Title"
             placeholder="e.g: C# and it's impact on full-stack development..."
+            maxLength={MAX_TITLE_LENGTH}
           />
 
           {/* Post body */}
           <PostTextareaField
             control={form.control}
             name="body"
-            maxLength={MAX_BODY_LENGTH}
             label="Body"
             placeholder="e.g: Today I discovered that..."
+            maxLength={MAX_BODY_LENGTH}
           />
 
           {/* Input for assigning a tag to the post */}
           <PostInputField
             control={form.control}
             name="tag"
-            maxLength={MAX_TAG_LENGTH}
             label="Tags"
             placeholder="e.g: ai"
+            maxLength={MAX_TAG_LENGTH}
             onKeyDown={handleAddTag}
           />
         </div>
@@ -129,7 +145,9 @@ export default function CreatePostForm() {
             <FileImage />
             Add media
           </Button>
-          <Button type="submit">Save changes</Button>
+          <DialogClose asChild>
+            <Button type="submit">Save changes</Button>
+          </DialogClose>
         </DialogFooter>
       </form>
     </Form>

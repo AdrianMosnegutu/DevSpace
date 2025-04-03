@@ -4,10 +4,10 @@ import { Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import { CardFooter } from "../ui/card";
 import { formatNumber } from "@/lib/utils";
-import { TPost } from "common";
+import { TPostResponse } from "common";
 
-export default function PostFooter({ likes }: TPost) {
-  function handleLike() { }
+export default function PostFooter({ likes }: TPostResponse) {
+  function handleLike() {}
 
   return (
     <CardFooter>

@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical, Eraser, Pencil } from "lucide-react";
+import { EllipsisVertical, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -10,28 +10,15 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "../ui/dropdown-menu";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "../ui/alert-dialog";
-import { AlertDialogFooter, AlertDialogHeader } from "../ui/alert-dialog";
 import { useState } from "react";
+import DeletePostDialog from "../dialogs/delete-post-dialog";
 
-export default function PostOptions() {
+interface Props {
+  postId: string;
+}
+
+export default function PostOptions({ postId }: Props) {
   const [dropdownOpen, setDropdownOpen] = useState(false);
-
-  function handleCancel() {
-    setDropdownOpen(false);
-  }
-
-  function handleAccept() {
-    setDropdownOpen(false);
-  }
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -40,42 +27,25 @@ export default function PostOptions() {
           <EllipsisVertical />
         </Button>
       </DropdownMenuTrigger>
+
       <DropdownMenuContent>
         <DropdownMenuLabel>Post Actions</DropdownMenuLabel>
+
         <DropdownMenuSeparator />
+
         <DropdownMenuItem>
           <Pencil />
           Edit
         </DropdownMenuItem>
+
         <DropdownMenuItem
           onSelect={(event) => event.preventDefault()}
           className="p-0"
         >
-          <AlertDialog>
-            <AlertDialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5">
-              <Eraser />
-              Delete
-            </AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>
-                  Are you sure you want to delete this post?
-                </AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  this post and remove it from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel onClick={handleCancel}>
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction onClick={handleAccept}>
-                  Delete
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
+          <DeletePostDialog
+            postId={postId}
+            closeDropdown={() => setDropdownOpen(false)}
+          />
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
