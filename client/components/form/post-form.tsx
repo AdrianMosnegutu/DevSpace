@@ -1,7 +1,6 @@
 import RemovableTagsList from "@/components/removable-tags-list";
 import { Button } from "@/components/ui/button";
 import {
-  DialogClose,
   DialogDescription,
   DialogFooter,
   DialogHeader,
@@ -128,9 +127,7 @@ export default function PostForm({
           </Button>
 
           {/* Save form changes */}
-          <DialogClose asChild>
-            <Button type="submit">{actionText}</Button>
-          </DialogClose>
+          <Button type="submit">{actionText}</Button>
         </DialogFooter>
       </form>
     </Form>

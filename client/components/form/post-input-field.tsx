@@ -5,8 +5,7 @@ import { TPostSchema } from "@/lib/form-schemas/post-schema";
 import FieldLabel from "./field-label";
 
 interface Props {
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  control: Control<TPostSchema, any, TPostSchema>;
+  control: Control<TPostSchema, unknown, TPostSchema>;
   name: "title" | "body" | "tag" | "tags" | `tags.${number}`;
   label?: string;
   placeholder?: string;

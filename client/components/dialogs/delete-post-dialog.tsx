@@ -12,7 +12,7 @@ import {
 } from "../ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { deletePost } from "@/lib/services/post-service";
-import { toast } from "sonner";
+import { errorToast, regularToast } from "@/lib/utils";
 
 interface Props {
   postId: string;
@@ -22,29 +22,27 @@ interface Props {
 export default function DeletePostDialog({ postId, closeDropdown }: Props) {
   const router = useRouter();
 
-  function handleDeletePost() {
-    deletePost(postId)
-      .then(() => {
-        toast("Post was deleted", {
-          description: "You successfully deleted this post!",
-          descriptionClassName: "!text-neutral-500",
-        });
-      })
-      .catch((err: Error) => {
-        toast("Post could not be deleted", {
-          description: `This post couldn't be deleted: ${err.message}`,
-          descriptionClassName: "!text-neutral-500",
-        });
-      });
+  async function handleDeletePost() {
+    try {
+      await deletePost(postId);
 
-    closeDropdown();
-    router.refresh();
+      regularToast(
+        "Post successfully deleted!",
+        "You successfully deleted a post from DevSpace!",
+      );
+
+      router.refresh();
+    } catch (error) {
+      errorToast("Post could not be deleted", error);
+    } finally {
+      closeDropdown();
+    }
   }
 
   return (
     <AlertDialog>
-      <AlertDialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5">
-        <Eraser />
+      <AlertDialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5 text-red-600">
+        <Eraser className="text-red-600" />
         Delete
       </AlertDialogTrigger>
 

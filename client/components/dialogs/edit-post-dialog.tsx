@@ -2,11 +2,11 @@ import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import PostForm from "../form/post-form";
 import { Pencil } from "lucide-react";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
-import axios from "axios";
-import { BACKEND_URL } from "@/lib/constants";
-import { toast } from "sonner";
 import { TPostResponse } from "common";
 import { useRouter } from "next/navigation";
+import { errorToast, regularToast } from "@/lib/utils";
+import { editPost } from "@/lib/services/post-service";
+import { useState } from "react";
 
 export default function EditPostDialog({
   id,
@@ -17,26 +17,28 @@ export default function EditPostDialog({
 }: TPostResponse & { closeDropdown: () => void }) {
   const router = useRouter();
 
-  function submitValues(values: TPostSchema) {
-    axios
-      .patch(`${BACKEND_URL}/api/posts/${id}`, values)
-      .then(() => {
-        toast("Post successfully edited!", {
-          description: "You successfully edited a post!",
-          descriptionClassName: "!text-neutral-500",
-        });
-        router.refresh();
-      })
-      .catch((error: Error) => {
-        toast("Post could not be edited!", {
-          description: error.message,
-          descriptionClassName: "!text-red-600",
-        });
-      });
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  async function submitValues(values: TPostSchema) {
+    try {
+      await editPost(id, values);
+
+      regularToast(
+        "Post successfully edited!",
+        "You successfully edited a post!",
+      );
+
+      router.refresh();
+    } catch (error) {
+      errorToast("Post could not be edited!", error);
+    } finally {
+      setIsDialogOpen(false);
+      closeDropdown();
+    }
   }
 
   return (
-    <Dialog onOpenChange={(e) => !e.valueOf() && closeDropdown()}>
+    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5">
         <Pencil />
         Edit
