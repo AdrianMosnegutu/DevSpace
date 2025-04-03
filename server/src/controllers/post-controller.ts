@@ -1,6 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-import PostsStore from "../store/post-store";
 import { ExpressError, STATUS_CODE, TPost } from "common";
+import PostsStore from "../store/post-store";
 
 const store = new PostsStore();
 
@@ -55,13 +55,13 @@ export function getPostsWithTags(request: Request, response: Response) {
 }
 
 export function getPostsOrderedByDate(request: Request, response: Response) {
-  const { descending } = request.body as { descending: boolean };
+  const descending = request.query.descending === "true";
   const results = store.getPostsOrderedByDate(descending);
   response.status(STATUS_CODE.OK).send(results);
 }
 
 export function getPostsOrderedByLikes(request: Request, response: Response) {
-  const { descending } = request.body as { descending: boolean };
+  const descending = request.query.descending === "true";
   const results = store.getPostsOrderedByLikes(descending);
   response.status(STATUS_CODE.OK).send(results);
 }

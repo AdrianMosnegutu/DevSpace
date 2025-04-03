@@ -21,7 +21,7 @@ export default class PostsStore {
   getPostsOrderedByDate(descending: boolean): TPost[] {
     return this.#posts.slice().sort((a, b) => {
       const order = descending ? -1 : 1;
-      return order * (a.date.getTime() - b.date.getTime());
+      return order * (b.date.getTime() - a.date.getTime());
     });
   }
 
@@ -41,7 +41,7 @@ export default class PostsStore {
       tags,
       likes: 0,
     };
-    this.#posts.push(newPost);
+    this.#posts = [newPost, ...this.#posts];
     return newPost;
   }
 

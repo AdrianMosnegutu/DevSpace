@@ -6,22 +6,16 @@ export default function validateDescending(
   _response: Response,
   next: NextFunction,
 ) {
-  const { descending } = request.body;
+  const descending = request.query.descending;
 
-  if (descending === null) {
+  if (
+    descending !== undefined &&
+    descending !== "true" &&
+    descending !== "false"
+  ) {
     const err: ExpressError = {
       name: "ExpressError",
-      message: "No ordering provided!",
-      code: STATUS_CODE.BAD_REQUEST,
-    };
-
-    return next(err);
-  }
-
-  if (typeof descending !== "boolean") {
-    const err: ExpressError = {
-      name: "ExpressError",
-      message: "Ordering property must be a boolean!",
+      message: "Ordering property must be true or false!",
       code: STATUS_CODE.BAD_REQUEST,
     };
 
