@@ -1,17 +1,17 @@
 import { TPost } from "common";
 import { Card } from "../ui/card";
-import PostHeader from "./post-header";
-import PostContent from "./post-content";
-import PostFooter from "./post-footer";
+import clsx from "clsx";
+import { ReactNode } from "react";
 
-export default function Post(post: TPost) {
+type Props = TPost & {
+  className?: string;
+  children: ReactNode;
+};
+
+export default function Post({ className, children }: Props) {
   return (
     <li className="w-full">
-      <Card>
-        <PostHeader {...post} />
-        <PostContent {...post} />
-        <PostFooter {...post} />
-      </Card>
+      <Card className={clsx(className)}>{children}</Card>
     </li>
   );
 }

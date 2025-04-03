@@ -36,7 +36,7 @@ export default function SearchBar() {
 
   const [inputTag, setInputTag] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
-  const [ordering, setOrdering] = useState<string>("Newest");
+  const [ordering, setOrdering] = useState<string>("Order");
 
   function handleRemoveTag(tag: string) {
     setTags((prev) => prev.filter((item) => item !== tag));
