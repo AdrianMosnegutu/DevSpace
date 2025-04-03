@@ -1,6 +1,5 @@
 import {
   AlertDialog,
-  AlertDialogAction,
   AlertDialogCancel,
   AlertDialogContent,
   AlertDialogDescription,
@@ -8,9 +7,10 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "../ui/alert-dialog";
-import { useRouter } from "next/navigation";
-import { deletePost } from "@/lib/services/post-service";
+import { serverDeletePost } from "@/lib/services/post-service";
 import { errorToast, regularToast } from "@/lib/utils";
+import { usePosts } from "@/contexts/posts-context";
+import { Button } from "../ui/button";
 
 interface Props {
   postId: string;
@@ -23,22 +23,21 @@ export default function DeletePostDialog({
   open,
   handleDialogOpenChange,
 }: Props) {
-  const router = useRouter();
+  const { deletePost } = usePosts();
 
   async function handleDeletePost() {
     try {
-      await deletePost(postId);
+      await serverDeletePost(postId);
+      setTimeout(() => deletePost(postId), 200);
 
       regularToast(
         "Post successfully deleted!",
         "You successfully deleted a post from DevSpace!",
       );
 
-      setTimeout(router.refresh, 100);
+      handleDialogOpenChange(false);
     } catch (error) {
       errorToast("Post could not be deleted", error);
-    } finally {
-      handleDialogOpenChange(false);
     }
   }
 
@@ -61,9 +60,7 @@ export default function DeletePostDialog({
             Cancel
           </AlertDialogCancel>
 
-          <AlertDialogAction onClick={handleDeletePost}>
-            Delete
-          </AlertDialogAction>
+          <Button onClick={handleDeletePost}>Delete</Button>
         </AlertDialogFooter>
       </AlertDialogContent>
     </AlertDialog>

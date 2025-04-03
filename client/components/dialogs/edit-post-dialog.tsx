@@ -1,14 +1,14 @@
-import { Dialog, DialogContent } from "@/components/ui/dialog";
 import PostForm from "../form/post-form";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
-import { TPostResponse } from "common";
-import { useRouter } from "next/navigation";
+import { TPost } from "common";
 import { errorToast, regularToast } from "@/lib/utils";
-import { editPost } from "@/lib/services/post-service";
+import { serverUpdatePost } from "@/lib/services/post-service";
+import { usePosts } from "@/contexts/posts-context";
 
-type Props = TPostResponse & {
+type Props = TPost & {
   open: boolean;
-  handleDialogOpenChange: (e: boolean) => void;
+  handleDialogOpenChange: (isOpen: boolean) => void;
 };
 
 export default function EditPostDialog({
@@ -19,22 +19,21 @@ export default function EditPostDialog({
   open,
   handleDialogOpenChange,
 }: Props) {
-  const router = useRouter();
+  const { updatePost } = usePosts();
 
   async function submitValues(values: TPostSchema) {
     try {
-      await editPost(id, values);
+      const updatedPost = await serverUpdatePost(id, values);
+      updatePost(updatedPost);
 
       regularToast(
-        "Post successfully edited!",
+        "Post successfully updated!",
         "You successfully edited a post!",
       );
 
-      setTimeout(router.refresh, 100);
+      handleDialogOpenChange(false);
     } catch (error) {
       errorToast("Post could not be edited!", error);
-    } finally {
-      handleDialogOpenChange(false);
     }
   }
 

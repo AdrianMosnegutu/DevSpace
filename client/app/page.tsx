@@ -1,14 +1,11 @@
-import Post from "@/components/post";
-import { fetchPosts } from "@/lib/services/post-service";
+import PostsList from "@/components/page/posts-list";
+import { PostProvider } from "@/contexts/posts-context";
+import { serverGetPosts } from "@/lib/services/post-service";
 
 export default async function HomePage() {
-  const posts = await fetchPosts();
-
   return (
-    <ul className="flex w-full flex-col items-center gap-4">
-      {posts.map((post) => (
-        <Post key={post.id} {...post} />
-      ))}
-    </ul>
+    <PostProvider posts={await serverGetPosts()}>
+      <PostsList />
+    </PostProvider>
   );
 }

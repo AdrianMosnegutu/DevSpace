@@ -13,9 +13,9 @@ import {
 import { useState } from "react";
 import DeletePostDialog from "../dialogs/delete-post-dialog";
 import EditPostDialog from "../dialogs/edit-post-dialog";
-import { TPostResponse } from "common";
+import { TPost } from "common";
 
-export default function PostOptions(post: TPostResponse) {
+export default function PostOptions(post: TPost) {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
   const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
   const [deletePostOpen, setDeletePostOpen] = useState<boolean>(false);

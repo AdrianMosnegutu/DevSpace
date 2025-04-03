@@ -1,9 +1,9 @@
 import { timeSince } from "@/lib/utils";
 import { CardHeader } from "../ui/card";
 import PostOptions from "./post-options";
-import { TPostResponse } from "common";
+import { TPost } from "common";
 
-export default function PostHeader(post: TPostResponse) {
+export default function PostHeader(post: TPost) {
   const { title, date } = post;
 
   return (
@@ -12,8 +12,8 @@ export default function PostHeader(post: TPostResponse) {
       <h2 className="mr-auto text-3xl font-bold">{title}</h2>
 
       {/* Time since the post is live */}
-      <time dateTime={date} className="text-muted-foreground">
-        {timeSince(new Date(date))}
+      <time dateTime={date.toUTCString()} className="text-muted-foreground">
+        {timeSince(date)}
       </time>
 
       {/* Button to open the options menu for the selected post */}

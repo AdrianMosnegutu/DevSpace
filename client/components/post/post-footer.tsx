@@ -4,19 +4,19 @@ import { Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import { CardFooter } from "../ui/card";
 import { errorToast, formatNumber } from "@/lib/utils";
-import { TPostResponse } from "common";
+import { TPost } from "common";
 import { useState } from "react";
-import { likePost, unlikePost } from "@/lib/services/post-service";
+import { serverLikePost, serverUnlikePost } from "@/lib/services/post-service";
 import clsx from "clsx";
 
-export default function PostFooter({ id, likes }: TPostResponse) {
+export default function PostFooter({ id, likes }: TPost) {
   const [isPostLiked, setIsPostLiked] = useState<boolean>(false);
   const [clientLikes, setClientLikes] = useState<number>(likes);
 
   async function handleLike() {
     if (isPostLiked) {
       try {
-        await unlikePost(id);
+        await serverUnlikePost(id);
         setIsPostLiked(false);
         setClientLikes((prev) => prev - 1);
       } catch (error) {
@@ -24,7 +24,7 @@ export default function PostFooter({ id, likes }: TPostResponse) {
       }
     } else {
       try {
-        await likePost(id);
+        await serverLikePost(id);
         setIsPostLiked(true);
         setClientLikes((prev) => prev + 1);
       } catch (error) {

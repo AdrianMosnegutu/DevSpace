@@ -6,7 +6,7 @@ import PostForm from "../form/post-form";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
 import { useRouter } from "next/navigation";
 import { errorToast, regularToast } from "@/lib/utils";
-import { createPost } from "@/lib/services/post-service";
+import { serverCreatePost } from "@/lib/services/post-service";
 import { useState } from "react";
 
 export default function CreatePostDialog() {
@@ -16,7 +16,7 @@ export default function CreatePostDialog() {
 
   async function submitValues(values: TPostSchema) {
     try {
-      await createPost(values);
+      await serverCreatePost(values);
 
       regularToast(
         "Post successfully edited!",

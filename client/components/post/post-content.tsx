@@ -1,8 +1,8 @@
 import { CardContent } from "../ui/card";
 import { Badge } from "../ui/badge";
-import { TPostResponse } from "common";
+import { TPost } from "common";
 
-export default function PostContent({ body, tags }: TPostResponse) {
+export default function PostContent({ body, tags }: TPost) {
   return (
     <CardContent className="flex flex-col gap-8">
       {/* Post text body */}
