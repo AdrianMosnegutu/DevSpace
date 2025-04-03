@@ -1,5 +1,6 @@
 import { Router } from "express";
 import {
+  removeLike,
   addPost,
   deletePost,
   getAllPosts,
@@ -10,7 +11,6 @@ import {
   postIdParam,
   updatePost,
   addLike,
-  removeLike,
 } from "../controllers/post-controller";
 import { validatePost, validatePostTags } from "../middleware/validate-post";
 import validateDescending from "../middleware/validate-descending";
@@ -29,13 +29,15 @@ postsRouter.get("/order/likes", validateDescending, getPostsOrderedByLikes);
 
 // POST
 postsRouter.post("/", validatePost, addPost);
-postsRouter.post("/like/:postId", addLike);
-postsRouter.post("/unlike/:postId", removeLike);
+
+// PUT
+postsRouter.put("/:postId/like", addLike);
 
 // PATCH
 postsRouter.patch("/:postId", updatePost);
 
 // DELETE
 postsRouter.delete("/:postId", deletePost);
+postsRouter.delete("/:postId/like", removeLike);
 
 export default postsRouter;

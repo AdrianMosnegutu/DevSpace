@@ -92,8 +92,8 @@ export function addLike(
     return next(err);
   }
 
-  const updatedPost = store.addLike(request.post.id);
-  response.status(STATUS_CODE.OK).send(updatedPost);
+  store.addLike(request.post.id);
+  response.status(STATUS_CODE.NO_CONTENT).send();
 }
 
 export function removeLike(
@@ -111,8 +111,8 @@ export function removeLike(
     return next(err);
   }
 
-  const updatedPost = store.removeLike(request.post.id);
-  response.status(STATUS_CODE.OK).send(updatedPost);
+  store.removeLike(request.post.id);
+  response.status(STATUS_CODE.NO_CONTENT).send();
 }
 
 export function updatePost(

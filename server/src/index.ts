@@ -17,7 +17,7 @@ app.use(bodyParser.json());
 app.use(
   cors({
     origin: FRONTEND_URL,
-    methods: ["GET", "POST", "PATCH", "DELETE"],
+    methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
   }),
 );
 

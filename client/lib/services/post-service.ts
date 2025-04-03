@@ -33,12 +33,10 @@ export async function serverDeletePost(id: string) {
   await axios.delete(`${POSTS_ENDPOINT}/${id}`);
 }
 
-export async function serverLikePost(id: string): Promise<TPost> {
-  const response = await axios.post(`${POSTS_ENDPOINT}/like/${id}`);
-  return postResponseToObject(response.data as TPostResponse);
+export async function serverLikePost(id: string) {
+  await axios.put(`${POSTS_ENDPOINT}/${id}/like`);
 }
 
-export async function serverUnlikePost(id: string): Promise<TPost> {
-  const response = await axios.post(`${POSTS_ENDPOINT}/unlike/${id}`);
-  return postResponseToObject(response.data as TPostResponse);
+export async function serverUnlikePost(id: string) {
+  await axios.delete(`${POSTS_ENDPOINT}/${id}/like`);
 }

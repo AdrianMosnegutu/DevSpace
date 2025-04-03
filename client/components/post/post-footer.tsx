@@ -45,7 +45,12 @@ export default function PostFooter({ id, likes }: TPost) {
           )}
         />
 
-        <span className={clsx(isPostLiked && "font-bold text-red-500")}>
+        <span
+          className={clsx(
+            "font-normal",
+            isPostLiked && "!font-bold text-red-500",
+          )}
+        >
           {formatNumber(clientLikes)}
         </span>
       </Button>

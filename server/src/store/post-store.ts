@@ -45,18 +45,16 @@ export default class PostsStore {
     return newPost;
   }
 
-  addLike(id: string): TPost {
+  addLike(id: string) {
     this.#posts = this.#posts.map((post) =>
       post.id === id ? ({ ...post, likes: post.likes + 1 } as TPost) : post,
     );
-    return this.#posts.find((post) => post.id === id) as TPost;
   }
 
-  removeLike(id: string): TPost {
+  removeLike(id: string) {
     this.#posts = this.#posts.map((post) =>
       post.id === id ? ({ ...post, likes: post.likes - 1 } as TPost) : post,
     );
-    return this.#posts.find((post) => post.id === id) as TPost;
   }
 
   updatePost(

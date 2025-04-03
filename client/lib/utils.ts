@@ -92,8 +92,10 @@ export function errorToast(message: string, error: unknown) {
     description = error;
   } else if (error instanceof AxiosError && error.response) {
     description = error.response.data as string;
+  } else if (error instanceof Error) {
+    description = error.message;
   } else {
-    description = "An unkown error occured";
+    description = "An unkown error occured.";
   }
 
   toast(message, { description, descriptionClassName: "!text-red-600" });
