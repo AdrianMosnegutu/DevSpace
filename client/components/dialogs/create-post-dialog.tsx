@@ -4,37 +4,39 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import PostForm from "../form/post-form";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
-import { useRouter } from "next/navigation";
-import { errorToast, regularToast } from "@/lib/utils";
+import { errorToast, regularToast } from "@/lib/toasts";
 import { serverCreatePost } from "@/lib/services/post-service";
 import { useState } from "react";
+import { usePosts } from "@/contexts/posts-context";
+import { Plus } from "lucide-react";
 
 export default function CreatePostDialog() {
-  const router = useRouter();
+  const { createPost } = usePosts();
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
   async function submitValues(values: TPostSchema) {
     try {
-      await serverCreatePost(values);
+      const newPost = await serverCreatePost(values);
+      createPost(newPost);
 
       regularToast(
-        "Post successfully edited!",
-        "You successfully uploaded yor post to DevSpace!",
+        "Post successfully created!",
+        "You successfully uploaded your post to DevSpace!",
       );
 
-      setTimeout(router.refresh, 100);
+      setIsDialogOpen(false);
     } catch (error) {
       errorToast("Post could not be created!", error);
-    } finally {
-      setIsDialogOpen(false);
     }
   }
 
   return (
     <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
       <DialogTrigger asChild>
-        <Button>Create Post</Button>
+        <Button className="fixed right-6 bottom-6 flex aspect-square h-16 w-16 items-center justify-center rounded-full">
+          <Plus strokeWidth={3} className="!h-8 !w-8" />
+        </Button>
       </DialogTrigger>
 
       <DialogContent>

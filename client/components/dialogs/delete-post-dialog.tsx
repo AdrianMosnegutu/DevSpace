@@ -8,7 +8,7 @@ import {
   AlertDialogTitle,
 } from "../ui/alert-dialog";
 import { serverDeletePost } from "@/lib/services/post-service";
-import { errorToast, regularToast } from "@/lib/utils";
+import { errorToast, regularToast } from "@/lib/toasts";
 import { usePosts } from "@/contexts/posts-context";
 import { Button } from "../ui/button";
 
@@ -28,7 +28,6 @@ export default function DeletePostDialog({
   async function handleDeletePost() {
     try {
       await serverDeletePost(postId);
-      setTimeout(() => deletePost(postId), 200);
 
       regularToast(
         "Post successfully deleted!",
@@ -36,6 +35,7 @@ export default function DeletePostDialog({
       );
 
       handleDialogOpenChange(false);
+      setTimeout(() => deletePost(postId), 200);
     } catch (error) {
       errorToast("Post could not be deleted", error);
     }

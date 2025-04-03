@@ -11,7 +11,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
-import CreatePostDialog from "./dialogs/create-post-dialog";
 
 // Menu items.
 const items = [
@@ -52,9 +51,6 @@ export default function AppSidebar() {
               ))}
             </SidebarMenu>
           </SidebarGroupContent>
-        </SidebarGroup>
-        <SidebarGroup>
-          <CreatePostDialog />
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>

@@ -3,11 +3,12 @@
 import { Heart } from "lucide-react";
 import { Button } from "../ui/button";
 import { CardFooter } from "../ui/card";
-import { errorToast, formatNumber } from "@/lib/utils";
+import { errorToast } from "@/lib/toasts";
 import { TPost } from "common";
 import { useState } from "react";
 import { serverLikePost, serverUnlikePost } from "@/lib/services/post-service";
 import clsx from "clsx";
+import { formatNumber } from "@/lib/utils";
 
 export default function PostFooter({ id, likes }: TPost) {
   const [isPostLiked, setIsPostLiked] = useState<boolean>(false);

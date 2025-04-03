@@ -32,7 +32,7 @@ export default function RootLayout({
             <SidebarTrigger />
             {children}
           </main>
-          <Toaster />
+          <Toaster position="top-right" />
         </SidebarProvider>
       </body>
     </html>
