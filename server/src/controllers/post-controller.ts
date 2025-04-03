@@ -77,6 +77,44 @@ export function addPost(request: Request, response: Response) {
   response.status(STATUS_CODE.CREATED).send(newPost);
 }
 
+export function addLike(
+  request: PostRequest,
+  response: Response,
+  next: NextFunction,
+) {
+  if (!request.post) {
+    const err: ExpressError = {
+      name: "ExpressError",
+      message: "No post id was provided!",
+      code: STATUS_CODE.BAD_REQUEST,
+    };
+
+    return next(err);
+  }
+
+  const updatedPost = store.addLike(request.post.id);
+  response.status(STATUS_CODE.OK).send(updatedPost);
+}
+
+export function removeLike(
+  request: PostRequest,
+  response: Response,
+  next: NextFunction,
+) {
+  if (!request.post) {
+    const err: ExpressError = {
+      name: "ExpressError",
+      message: "No post id was provided!",
+      code: STATUS_CODE.BAD_REQUEST,
+    };
+
+    return next(err);
+  }
+
+  const updatedPost = store.removeLike(request.post.id);
+  response.status(STATUS_CODE.OK).send(updatedPost);
+}
+
 export function updatePost(
   request: PostRequest,
   response: Response,
