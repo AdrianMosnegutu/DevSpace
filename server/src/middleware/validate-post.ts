@@ -61,7 +61,7 @@ export function validatePostBody(
   next();
 }
 
-export function validatePostTags(
+export function validatePostBodyTags(
   request: Request,
   _response: Response,
   next: NextFunction,
@@ -101,6 +101,26 @@ export function validatePostTags(
   next();
 }
 
+export function validatePostQueryTags(
+  request: Request,
+  _response: Response,
+  next: NextFunction,
+) {
+  const { tags } = request.query;
+
+  if (!tags) {
+    const err: ExpressError = {
+      name: "ExpressError",
+      message: "No tags provided!",
+      code: STATUS_CODE.BAD_REQUEST,
+    };
+
+    return next(err);
+  }
+
+  next();
+}
+
 export function validatePost(
   request: Request,
   response: Response,
@@ -108,7 +128,7 @@ export function validatePost(
 ) {
   validatePostTitle(request, response, next);
   validatePostBody(request, response, next);
-  validatePostTags(request, response, next);
+  validatePostBodyTags(request, response, next);
 
   next();
 }

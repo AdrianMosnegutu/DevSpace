@@ -5,4 +5,5 @@ export interface TPostsContext {
   createPost: (post: TPost) => void;
   updatePost: (updatedPost: TPost) => void;
   deletePost: (id: string) => void;
+  setPosts: React.Dispatch<React.SetStateAction<TPost[]>>;
 }

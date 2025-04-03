@@ -6,7 +6,7 @@ import PostFooter from "./post-footer";
 
 export default function Post(post: TPost) {
   return (
-    <li className="w-full max-w-4xl">
+    <li className="w-full">
       <Card>
         <PostHeader {...post} />
         <PostContent {...post} />

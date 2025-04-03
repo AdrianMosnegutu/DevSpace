@@ -49,7 +49,9 @@ export function getPost(request: PostRequest, response: Response) {
 }
 
 export function getPostsWithTags(request: Request, response: Response) {
-  const { tags } = request.body as { tags: string[] };
+  const { tags: tagsQuery } = request.query as { tags: string };
+  const tags = tagsQuery.split(",");
+
   const results = store.getPostsWithTags(tags);
   response.status(STATUS_CODE.OK).send(results);
 }

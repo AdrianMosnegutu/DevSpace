@@ -43,7 +43,9 @@ export const PostProvider: React.FC<PostProviderProps> = ({
   };
 
   return (
-    <PostContext.Provider value={{ posts, createPost, deletePost, updatePost }}>
+    <PostContext.Provider
+      value={{ posts, createPost, deletePost, updatePost, setPosts }}
+    >
       {children}
     </PostContext.Provider>
   );
