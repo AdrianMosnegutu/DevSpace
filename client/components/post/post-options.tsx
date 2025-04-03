@@ -1,6 +1,6 @@
 "use client";
 
-import { EllipsisVertical } from "lucide-react";
+import { EllipsisVertical, Eraser, Pencil } from "lucide-react";
 import { Button } from "../ui/button";
 import {
   DropdownMenu,
@@ -16,7 +16,9 @@ import EditPostDialog from "../dialogs/edit-post-dialog";
 import { TPostResponse } from "common";
 
 export default function PostOptions(post: TPostResponse) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [editDialogOpen, setEditDialogOpen] = useState<boolean>(false);
+  const [deletePostOpen, setDeletePostOpen] = useState<boolean>(false);
 
   return (
     <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
@@ -29,30 +31,54 @@ export default function PostOptions(post: TPostResponse) {
 
       <DropdownMenuContent>
         <DropdownMenuLabel>Post Actions</DropdownMenuLabel>
-
         <DropdownMenuSeparator />
 
         {/* Edit post button */}
         <DropdownMenuItem
-          onSelect={(event) => event.preventDefault()}
-          className="p-0"
+          onSelect={(event) => {
+            event.preventDefault();
+            setEditDialogOpen(true);
+          }}
         >
-          <EditPostDialog
-            {...post}
-            closeDropdown={() => setDropdownOpen(false)}
-          />
+          <Pencil />
+          Edit
         </DropdownMenuItem>
 
         {/* Delete post button */}
         <DropdownMenuItem
-          onSelect={(event) => event.preventDefault()}
-          className="p-0"
+          onSelect={(event) => {
+            event.preventDefault();
+            setDeletePostOpen(true);
+          }}
+          className="!text-red-600"
         >
-          <DeletePostDialog
-            postId={post.id}
-            closeDropdown={() => setDropdownOpen(false)}
-          />
+          <Eraser className="text-red-600" />
+          Delete
         </DropdownMenuItem>
+
+        {/* Edit post dialog */}
+        <EditPostDialog
+          {...post}
+          open={editDialogOpen}
+          handleDialogOpenChange={(e) => {
+            setEditDialogOpen(e);
+            if (!e) {
+              setDropdownOpen(false);
+            }
+          }}
+        />
+
+        {/* Delete post dialog */}
+        <DeletePostDialog
+          postId={post.id}
+          open={deletePostOpen}
+          handleDialogOpenChange={(e) => {
+            setDeletePostOpen(e);
+            if (!e) {
+              setDropdownOpen(false);
+            }
+          }}
+        />
       </DropdownMenuContent>
     </DropdownMenu>
   );

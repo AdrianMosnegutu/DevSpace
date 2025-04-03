@@ -1,4 +1,3 @@
-import { Eraser } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -8,29 +7,23 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-  AlertDialogTrigger,
 } from "../ui/alert-dialog";
 import { useRouter } from "next/navigation";
 import { deletePost } from "@/lib/services/post-service";
 import { errorToast, regularToast } from "@/lib/utils";
-import { useState } from "react";
 
 interface Props {
   postId: string;
-  closeDropdown: () => void;
+  open: boolean;
+  handleDialogOpenChange: (e: boolean) => void;
 }
 
-export default function DeletePostDialog({ postId, closeDropdown }: Props) {
+export default function DeletePostDialog({
+  postId,
+  open,
+  handleDialogOpenChange,
+}: Props) {
   const router = useRouter();
-
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
-  function handleDialogOpenChange(e: boolean) {
-    setIsDialogOpen(e);
-    if (!e) {
-      closeDropdown();
-    }
-  }
 
   async function handleDeletePost() {
     try {
@@ -45,17 +38,12 @@ export default function DeletePostDialog({ postId, closeDropdown }: Props) {
     } catch (error) {
       errorToast("Post could not be deleted", error);
     } finally {
-      closeDropdown();
+      handleDialogOpenChange(false);
     }
   }
 
   return (
-    <AlertDialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
-      <AlertDialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5 text-red-600">
-        <Eraser className="text-red-600" />
-        Delete
-      </AlertDialogTrigger>
-
+    <AlertDialog open={open} onOpenChange={handleDialogOpenChange}>
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
@@ -69,7 +57,9 @@ export default function DeletePostDialog({ postId, closeDropdown }: Props) {
         </AlertDialogHeader>
 
         <AlertDialogFooter>
-          <AlertDialogCancel onClick={closeDropdown}>Cancel</AlertDialogCancel>
+          <AlertDialogCancel onClick={() => handleDialogOpenChange(false)}>
+            Cancel
+          </AlertDialogCancel>
 
           <AlertDialogAction onClick={handleDeletePost}>
             Delete

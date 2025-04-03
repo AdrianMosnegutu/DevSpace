@@ -1,30 +1,25 @@
-import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
 import PostForm from "../form/post-form";
-import { Pencil } from "lucide-react";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
 import { TPostResponse } from "common";
 import { useRouter } from "next/navigation";
 import { errorToast, regularToast } from "@/lib/utils";
 import { editPost } from "@/lib/services/post-service";
-import { useState } from "react";
+
+type Props = TPostResponse & {
+  open: boolean;
+  handleDialogOpenChange: (e: boolean) => void;
+};
 
 export default function EditPostDialog({
   id,
   title,
   body,
   tags,
-  closeDropdown,
-}: TPostResponse & { closeDropdown: () => void }) {
+  open,
+  handleDialogOpenChange,
+}: Props) {
   const router = useRouter();
-
-  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
-
-  function handleDialogOpenChange(e: boolean) {
-    setIsDialogOpen(e);
-    if (!e) {
-      closeDropdown();
-    }
-  }
 
   async function submitValues(values: TPostSchema) {
     try {
@@ -44,12 +39,7 @@ export default function EditPostDialog({
   }
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
-      <DialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5">
-        <Pencil />
-        Edit
-      </DialogTrigger>
-
+    <Dialog open={open} onOpenChange={handleDialogOpenChange}>
       <DialogContent>
         <PostForm
           title="Edit Post"
