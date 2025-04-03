@@ -13,6 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import { deletePost } from "@/lib/services/post-service";
 import { errorToast, regularToast } from "@/lib/utils";
+import { useState } from "react";
 
 interface Props {
   postId: string;
@@ -21,6 +22,15 @@ interface Props {
 
 export default function DeletePostDialog({ postId, closeDropdown }: Props) {
   const router = useRouter();
+
+  const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
+
+  function handleDialogOpenChange(e: boolean) {
+    setIsDialogOpen(e);
+    if (!e) {
+      closeDropdown();
+    }
+  }
 
   async function handleDeletePost() {
     try {
@@ -40,7 +50,7 @@ export default function DeletePostDialog({ postId, closeDropdown }: Props) {
   }
 
   return (
-    <AlertDialog>
+    <AlertDialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
       <AlertDialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5 text-red-600">
         <Eraser className="text-red-600" />
         Delete

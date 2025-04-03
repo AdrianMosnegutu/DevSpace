@@ -19,6 +19,13 @@ export default function EditPostDialog({
 
   const [isDialogOpen, setIsDialogOpen] = useState<boolean>(false);
 
+  function handleDialogOpenChange(e: boolean) {
+    setIsDialogOpen(e);
+    if (!e) {
+      closeDropdown();
+    }
+  }
+
   async function submitValues(values: TPostSchema) {
     try {
       await editPost(id, values);
@@ -32,13 +39,12 @@ export default function EditPostDialog({
     } catch (error) {
       errorToast("Post could not be edited!", error);
     } finally {
-      setIsDialogOpen(false);
-      closeDropdown();
+      handleDialogOpenChange(false);
     }
   }
 
   return (
-    <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+    <Dialog open={isDialogOpen} onOpenChange={handleDialogOpenChange}>
       <DialogTrigger className="flex h-full w-full items-center gap-2 px-2 py-1.5">
         <Pencil />
         Edit
