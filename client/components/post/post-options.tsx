@@ -21,65 +21,67 @@ export default function PostOptions(post: TPostResponse) {
   const [deletePostOpen, setDeletePostOpen] = useState<boolean>(false);
 
   return (
-    <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
-      {/* The post options button */}
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost">
-          <EllipsisVertical />
-        </Button>
-      </DropdownMenuTrigger>
+    <>
+      <DropdownMenu open={dropdownOpen} onOpenChange={setDropdownOpen}>
+        {/* The post options button */}
+        <DropdownMenuTrigger asChild>
+          <Button variant="ghost">
+            <EllipsisVertical />
+          </Button>
+        </DropdownMenuTrigger>
 
-      <DropdownMenuContent>
-        <DropdownMenuLabel>Post Actions</DropdownMenuLabel>
-        <DropdownMenuSeparator />
+        <DropdownMenuContent>
+          <DropdownMenuLabel>Post Actions</DropdownMenuLabel>
+          <DropdownMenuSeparator />
 
-        {/* Edit post button */}
-        <DropdownMenuItem
-          onSelect={(event) => {
-            event.preventDefault();
-            setEditDialogOpen(true);
-          }}
-        >
-          <Pencil />
-          Edit
-        </DropdownMenuItem>
+          {/* Edit post button */}
+          <DropdownMenuItem
+            onSelect={(event) => {
+              event.preventDefault();
+              setEditDialogOpen(true);
+            }}
+          >
+            <Pencil />
+            Edit
+          </DropdownMenuItem>
 
-        {/* Delete post button */}
-        <DropdownMenuItem
-          onSelect={(event) => {
-            event.preventDefault();
-            setDeletePostOpen(true);
-          }}
-          className="!text-red-600"
-        >
-          <Eraser className="text-red-600" />
-          Delete
-        </DropdownMenuItem>
+          {/* Delete post button */}
+          <DropdownMenuItem
+            onSelect={(event) => {
+              event.preventDefault();
+              setDeletePostOpen(true);
+            }}
+            className="!text-red-600"
+          >
+            <Eraser className="text-red-600" />
+            Delete
+          </DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
 
-        {/* Edit post dialog */}
-        <EditPostDialog
-          {...post}
-          open={editDialogOpen}
-          handleDialogOpenChange={(e) => {
-            setEditDialogOpen(e);
-            if (!e) {
-              setDropdownOpen(false);
-            }
-          }}
-        />
+      {/* Edit post dialog */}
+      <EditPostDialog
+        {...post}
+        open={editDialogOpen}
+        handleDialogOpenChange={(e) => {
+          setEditDialogOpen(e);
+          if (!e) {
+            setDropdownOpen(false);
+          }
+        }}
+      />
 
-        {/* Delete post dialog */}
-        <DeletePostDialog
-          postId={post.id}
-          open={deletePostOpen}
-          handleDialogOpenChange={(e) => {
-            setDeletePostOpen(e);
-            if (!e) {
-              setDropdownOpen(false);
-            }
-          }}
-        />
-      </DropdownMenuContent>
-    </DropdownMenu>
+      {/* Delete post dialog */}
+      <DeletePostDialog
+        postId={post.id}
+        open={deletePostOpen}
+        handleDialogOpenChange={(e) => {
+          setDeletePostOpen(e);
+          if (!e) {
+            setDropdownOpen(false);
+          }
+        }}
+      />
+    </>
   );
 }
