@@ -1,4 +1,4 @@
-import { CodeXml, Home, Search } from "lucide-react";
+import { ChartColumnBig, CodeXml, Home } from "lucide-react";
 
 import {
   Sidebar,
@@ -16,13 +16,13 @@ import {
 const items = [
   {
     title: "Home",
-    url: "#",
+    url: "/",
     icon: Home,
   },
   {
-    title: "Search",
-    url: "#",
-    icon: Search,
+    title: "Statistics",
+    url: "/statistics",
+    icon: ChartColumnBig,
   },
 ];
 
