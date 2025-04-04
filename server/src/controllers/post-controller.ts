@@ -44,8 +44,53 @@ export function getAllPosts(_request: Request, response: Response) {
   response.status(STATUS_CODE.OK).send(store.getAllPosts());
 }
 
+export function getPostsOnPage(request: Request, response: Response) {
+  const page = Number(request.query.page);
+  response.status(STATUS_CODE.OK).send(store.getPostsOnPage(page));
+}
+
 export function getPost(request: PostRequest, response: Response) {
   response.status(STATUS_CODE.OK).send(request.post);
+}
+
+export function getNewestPost(_request: Request, response: Response) {
+  const newestPost = store.getNewestPost();
+
+  if (newestPost) {
+    response.status(STATUS_CODE.OK).send(newestPost);
+  } else {
+    response.status(STATUS_CODE.NOT_FOUND).send("There are no posts!");
+  }
+}
+
+export function getOldestPost(_request: Request, response: Response) {
+  const oldestPost = store.getOldestPost();
+
+  if (oldestPost) {
+    response.status(STATUS_CODE.OK).send(oldestPost);
+  } else {
+    response.status(STATUS_CODE.NOT_FOUND).send("There are no posts!");
+  }
+}
+
+export function getMostLikedPost(_request: Request, response: Response) {
+  const mostLikedPost = store.getMostLikedPost();
+
+  if (mostLikedPost) {
+    response.status(STATUS_CODE.OK).send(mostLikedPost);
+  } else {
+    response.status(STATUS_CODE.NOT_FOUND).send("There are no posts!");
+  }
+}
+
+export function getLeastLikedPost(_request: Request, response: Response) {
+  const leastLikedPost = store.getLeastLikedPost();
+
+  if (leastLikedPost) {
+    response.status(STATUS_CODE.OK).send(leastLikedPost);
+  } else {
+    response.status(STATUS_CODE.NOT_FOUND).send("There are no posts!");
+  }
 }
 
 export function getPostsWithTags(request: Request, response: Response) {
@@ -57,14 +102,18 @@ export function getPostsWithTags(request: Request, response: Response) {
 }
 
 export function getPostsOrderedByDate(request: Request, response: Response) {
+  const page = Number(request.query.page);
   const descending = request.query.descending === "true";
-  const results = store.getPostsOrderedByDate(descending);
+
+  const results = store.getPostsOrderedByDate(page, descending);
   response.status(STATUS_CODE.OK).send(results);
 }
 
 export function getPostsOrderedByLikes(request: Request, response: Response) {
+  const page = Number(request.query.page);
   const descending = request.query.descending === "true";
-  const results = store.getPostsOrderedByLikes(descending);
+
+  const results = store.getPostsOrderedByLikes(page, descending);
   response.status(STATUS_CODE.OK).send(results);
 }
 

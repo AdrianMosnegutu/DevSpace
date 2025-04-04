@@ -13,8 +13,33 @@ function postResponsesToObjects(posts: TPostResponse[]): TPost[] {
   return posts.map((post) => postResponseToObject(post));
 }
 
-export async function serverGetPosts(): Promise<TPost[]> {
-  const response = await axios.get(POSTS_ENDPOINT);
+export async function serverGetAllPosts(): Promise<TPost[]> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/all`);
+  return postResponsesToObjects(response.data as TPostResponse[]);
+}
+
+export async function serverGetOldestPost(): Promise<TPost> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/oldest`);
+  return postResponseToObject(response.data as TPostResponse);
+}
+
+export async function serverGetMostLikedPost(): Promise<TPost> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/mostLiked`);
+  return postResponseToObject(response.data as TPostResponse);
+}
+
+export async function serverGetLeastLikedPost(): Promise<TPost> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/leastLiked`);
+  return postResponseToObject(response.data as TPostResponse);
+}
+
+export async function serverGetNewestPost(): Promise<TPost> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/newest`);
+  return postResponseToObject(response.data as TPostResponse);
+}
+
+export async function serverGetPostsOnPage(page: number): Promise<TPost[]> {
+  const response = await axios.get(`${POSTS_ENDPOINT}?page=${page}`);
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
@@ -51,26 +76,36 @@ export async function serverGetPostsWithTags(tags: string[]): Promise<TPost[]> {
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
-export async function serverGetPostsOrderedLikesAscending(): Promise<TPost[]> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/order/likes`);
-  return postResponsesToObjects(response.data as TPostResponse[]);
-}
-
-export async function serverGetPostsOrderedLikesDescending(): Promise<TPost[]> {
+export async function serverGetPostsOrderedLikesAscending(
+  page: number,
+): Promise<TPost[]> {
   const response = await axios.get(
-    `${POSTS_ENDPOINT}/order/likes?descending=true`,
+    `${POSTS_ENDPOINT}/order/likes?page=${page}`,
   );
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
-export async function serverGetPostsOrderedDateAscending(): Promise<TPost[]> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/order/date`);
+export async function serverGetPostsOrderedLikesDescending(
+  page: number,
+): Promise<TPost[]> {
+  const response = await axios.get(
+    `${POSTS_ENDPOINT}/order/likes?page=${page}&descending=true`,
+  );
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
-export async function serverGetPostsOrderedDateDescending(): Promise<TPost[]> {
+export async function serverGetPostsOrderedDateAscending(
+  page: number,
+): Promise<TPost[]> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/order/date?page=${page}`);
+  return postResponsesToObjects(response.data as TPostResponse[]);
+}
+
+export async function serverGetPostsOrderedDateDescending(
+  page: number,
+): Promise<TPost[]> {
   const response = await axios.get(
-    `${POSTS_ENDPOINT}/order/date?descending=true`,
+    `${POSTS_ENDPOINT}/order/date?page=${page}&descending=true`,
   );
   return postResponsesToObjects(response.data as TPostResponse[]);
 }

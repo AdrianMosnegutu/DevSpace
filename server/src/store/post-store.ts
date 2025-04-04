@@ -1,4 +1,4 @@
-import { mockPosts, TPost } from "common";
+import { itemsPerPage, mockPosts, TPost } from "common";
 import { v4 as uuidv4 } from "uuid";
 
 export default class PostsStore {
@@ -8,8 +8,52 @@ export default class PostsStore {
     return this.#posts;
   }
 
+  getPostsOnPage(page: number): TPost[] {
+    return this.#posts.slice(page * itemsPerPage, (page + 1) * itemsPerPage);
+  }
+
   getPost(id: string): TPost | undefined {
     return this.#posts.find((post) => post.id === id);
+  }
+
+  getNewestPost(): TPost | undefined {
+    let newestPost: TPost | undefined;
+    this.#posts.forEach((post) => {
+      if (!newestPost || post.date > newestPost.date) {
+        newestPost = post;
+      }
+    });
+    return newestPost;
+  }
+
+  getOldestPost(): TPost | undefined {
+    let oldestPost: TPost | undefined;
+    this.#posts.forEach((post) => {
+      if (!oldestPost || post.date < oldestPost.date) {
+        oldestPost = post;
+      }
+    });
+    return oldestPost;
+  }
+
+  getMostLikedPost(): TPost | undefined {
+    let mostLikedPost: TPost | undefined;
+    this.#posts.forEach((post) => {
+      if (!mostLikedPost || post.likes > mostLikedPost.likes) {
+        mostLikedPost = post;
+      }
+    });
+    return mostLikedPost;
+  }
+
+  getLeastLikedPost(): TPost | undefined {
+    let leastLikedPost: TPost | undefined;
+    this.#posts.forEach((post) => {
+      if (!leastLikedPost || post.likes < leastLikedPost.likes) {
+        leastLikedPost = post;
+      }
+    });
+    return leastLikedPost;
   }
 
   getPostsWithTags(tags: string[]): TPost[] {
@@ -18,18 +62,22 @@ export default class PostsStore {
     );
   }
 
-  getPostsOrderedByDate(descending: boolean): TPost[] {
-    return this.#posts.slice().sort((a, b) => {
-      const order = descending ? -1 : 1;
-      return order * (b.date.getTime() - a.date.getTime());
-    });
+  getPostsOrderedByDate(page: number, descending: boolean): TPost[] {
+    return this.#posts
+      .sort((a, b) => {
+        const order = descending ? -1 : 1;
+        return order * (b.date.getTime() - a.date.getTime());
+      })
+      .slice(page * itemsPerPage, (page + 1) * itemsPerPage);
   }
 
-  getPostsOrderedByLikes(descending: boolean): TPost[] {
-    return this.#posts.slice().sort((a, b) => {
-      const order = descending ? -1 : 1;
-      return order * (a.likes - b.likes);
-    });
+  getPostsOrderedByLikes(page: number, descending: boolean): TPost[] {
+    return this.#posts
+      .sort((a, b) => {
+        const order = descending ? -1 : 1;
+        return order * (a.likes - b.likes);
+      })
+      .slice(page * itemsPerPage, (page + 1) * itemsPerPage);
   }
 
   addPost(title: string, body: string, tags: string[]): TPost {

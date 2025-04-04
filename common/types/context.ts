@@ -2,8 +2,11 @@ import { TPost } from "./post";
 
 export interface TPostsContext {
   posts: TPost[];
+  setPosts: React.Dispatch<React.SetStateAction<TPost[]>>;
   createPost: (post: TPost) => void;
   updatePost: (updatedPost: TPost) => void;
   deletePost: (id: string) => void;
-  setPosts: React.Dispatch<React.SetStateAction<TPost[]>>;
+  currentPage: number;
+  incrementPage: () => void;
+  decrementPage: () => void;
 }

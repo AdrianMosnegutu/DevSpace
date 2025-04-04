@@ -25,6 +25,7 @@ export const PostProvider: React.FC<PostProviderProps> = ({
   children,
 }) => {
   const [posts, setPosts] = useState<TPost[]>(initialPosts);
+  const [currentPage, setCurrentPage] = useState<number>(0);
 
   const createPost = (post: TPost) => {
     setPosts((prevPosts) => [post, ...prevPosts]);
@@ -42,9 +43,26 @@ export const PostProvider: React.FC<PostProviderProps> = ({
     );
   };
 
+  const incrementPage = () => {
+    setCurrentPage((prev) => prev + 1);
+  };
+
+  const decrementPage = () => {
+    setCurrentPage((prev) => prev - 1);
+  };
+
   return (
     <PostContext.Provider
-      value={{ posts, createPost, deletePost, updatePost, setPosts }}
+      value={{
+        posts,
+        setPosts,
+        createPost,
+        deletePost,
+        updatePost,
+        currentPage,
+        incrementPage,
+        decrementPage,
+      }}
     >
       {children}
     </PostContext.Provider>

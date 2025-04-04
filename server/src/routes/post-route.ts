@@ -11,12 +11,18 @@ import {
   postIdParam,
   updatePost,
   addLike,
+  getPostsOnPage,
+  getNewestPost,
+  getOldestPost,
+  getMostLikedPost,
+  getLeastLikedPost,
 } from "../controllers/post-controller";
 import {
   validatePost,
   validatePostQueryTags,
 } from "../middleware/validate-post";
 import validateDescending from "../middleware/validate-descending";
+import validatePage from "../middleware/validate-page";
 
 const postsRouter = Router();
 
@@ -24,10 +30,33 @@ const postsRouter = Router();
 postsRouter.param("postId", postIdParam);
 
 // GET
-postsRouter.get("/", getAllPosts);
+postsRouter.get("/", validatePage, getPostsOnPage);
+postsRouter.get("/all", getAllPosts);
+
+// GET a post with a special property
+postsRouter.get("/newest", getNewestPost);
+postsRouter.get("/oldest", getOldestPost);
+postsRouter.get("/mostLiked", getMostLikedPost);
+postsRouter.get("/leastLiked", getLeastLikedPost);
+
+// GET filtered posts
 postsRouter.get("/filter", validatePostQueryTags, getPostsWithTags);
-postsRouter.get("/order/date", validateDescending, getPostsOrderedByDate);
-postsRouter.get("/order/likes", validateDescending, getPostsOrderedByLikes);
+
+// GET ordered posts
+postsRouter.get(
+  "/order/date",
+  validatePage,
+  validateDescending,
+  getPostsOrderedByDate,
+);
+postsRouter.get(
+  "/order/likes",
+  validatePage,
+  validateDescending,
+  getPostsOrderedByLikes,
+);
+
+// GET a specific post
 postsRouter.get("/:postId", getPost);
 
 // POST

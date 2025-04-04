@@ -9,7 +9,7 @@ import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { errorToast } from "@/lib/toasts";
 import {
-  serverGetPosts,
+  serverGetAllPosts,
   serverGetPostsOrderedDateAscending,
   serverGetPostsOrderedDateDescending,
   serverGetPostsOrderedLikesAscending,
@@ -24,19 +24,31 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { TPost } from "common";
 
-const orderings = [
-  { name: "Newest", serverFunction: serverGetPostsOrderedDateAscending },
-  { name: "Oldest", serverFunction: serverGetPostsOrderedDateDescending },
-  { name: "Least Liked", serverFunction: serverGetPostsOrderedLikesAscending },
-  { name: "Most Liked", serverFunction: serverGetPostsOrderedLikesDescending },
-];
-
 export default function SearchBar() {
-  const { setPosts } = usePosts();
+  const { setPosts, currentPage } = usePosts();
+
+  const orderings = [
+    {
+      name: "Newest",
+      serverFunction: () => serverGetPostsOrderedDateAscending(currentPage),
+    },
+    {
+      name: "Oldest",
+      serverFunction: () => serverGetPostsOrderedDateDescending(currentPage),
+    },
+    {
+      name: "Least Liked",
+      serverFunction: () => serverGetPostsOrderedLikesAscending(currentPage),
+    },
+    {
+      name: "Most Liked",
+      serverFunction: () => serverGetPostsOrderedLikesDescending(currentPage),
+    },
+  ];
 
   const [inputTag, setInputTag] = useState<string>("");
   const [tags, setTags] = useState<string[]>([]);
-  const [ordering, setOrdering] = useState<string>("Order");
+  const [ordering, setOrdering] = useState<string>("Newest");
 
   function handleRemoveTag(tag: string) {
     setTags((prev) => prev.filter((item) => item !== tag));
@@ -72,7 +84,7 @@ export default function SearchBar() {
   async function handleSearch() {
     if (tags.length === 0) {
       try {
-        const posts = await serverGetPosts();
+        const posts = await serverGetAllPosts();
         setPosts(posts);
       } catch (error) {
         errorToast("Could not fetch posts!", error);
