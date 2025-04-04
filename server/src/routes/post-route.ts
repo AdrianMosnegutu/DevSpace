@@ -18,8 +18,10 @@ import {
   getLeastLikedPost,
 } from "../controllers/post-controller";
 import {
-  validatePost,
+  validatePostBody,
+  validatePostBodyTags,
   validatePostQueryTags,
+  validatePostTitle,
 } from "../middleware/validate-post";
 import validateDescending from "../middleware/validate-descending";
 import validatePage from "../middleware/validate-page";
@@ -60,7 +62,13 @@ postsRouter.get(
 postsRouter.get("/:postId", getPost);
 
 // POST
-postsRouter.post("/", validatePost, addPost);
+postsRouter.post(
+  "/",
+  validatePostTitle,
+  validatePostBody,
+  validatePostBodyTags,
+  addPost,
+);
 
 // PUT
 postsRouter.put("/:postId/like", addLike);

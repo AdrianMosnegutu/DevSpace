@@ -120,15 +120,3 @@ export function validatePostQueryTags(
 
   next();
 }
-
-export function validatePost(
-  request: Request,
-  response: Response,
-  next: NextFunction,
-) {
-  validatePostTitle(request, response, next);
-  validatePostBody(request, response, next);
-  validatePostBodyTags(request, response, next);
-
-  next();
-}
