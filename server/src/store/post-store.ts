@@ -105,23 +105,14 @@ export default class PostsStore {
     );
   }
 
-  updatePost(
-    id: string,
-    title: string,
-    body: string,
-    tags: string[],
-  ): TPost | undefined {
-    let postToBeUpdated = this.#posts.find((post) => post.id === id);
-
-    if (postToBeUpdated === undefined) {
-      return undefined;
-    }
+  updatePost(id: string, title: string, body: string, tags: string[]): TPost {
+    let postToBeUpdated: TPost = this.#posts.find((post) => post.id === id) as TPost;
 
     postToBeUpdated = Object.assign(postToBeUpdated, {
       title,
       body,
       tags,
-      time: new Date(),
+      date: new Date(),
     });
 
     this.#posts.map((post) => (post.id === id ? postToBeUpdated : post));

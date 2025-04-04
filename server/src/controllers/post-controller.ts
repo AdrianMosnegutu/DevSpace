@@ -14,16 +14,6 @@ export function postIdParam(
   next: NextFunction,
   id: string,
 ) {
-  if (typeof id !== "string") {
-    const err: ExpressError = {
-      name: "ExpressError",
-      message: `Post id must be an uuid4 string!`,
-      code: STATUS_CODE.BAD_REQUEST,
-    };
-
-    return next(err);
-  }
-
   const post = store.getPost(id);
 
   if (!post) {
@@ -128,90 +118,34 @@ export function addPost(request: Request, response: Response) {
   response.status(STATUS_CODE.CREATED).send(newPost);
 }
 
-export function addLike(
-  request: PostRequest,
-  response: Response,
-  next: NextFunction,
-) {
-  if (!request.post) {
-    const err: ExpressError = {
-      name: "ExpressError",
-      message: "No post id was provided!",
-      code: STATUS_CODE.BAD_REQUEST,
-    };
-
-    return next(err);
-  }
-
-  store.addLike(request.post.id);
+export function addLike(request: PostRequest, response: Response) {
+  store.addLike((request.post as TPost).id);
   response.status(STATUS_CODE.NO_CONTENT).send();
 }
 
-export function removeLike(
-  request: PostRequest,
-  response: Response,
-  next: NextFunction,
-) {
-  if (!request.post) {
-    const err: ExpressError = {
-      name: "ExpressError",
-      message: "No post id was provided!",
-      code: STATUS_CODE.BAD_REQUEST,
-    };
-
-    return next(err);
-  }
-
-  store.removeLike(request.post.id);
+export function removeLike(request: PostRequest, response: Response) {
+  store.removeLike((request.post as TPost).id);
   response.status(STATUS_CODE.NO_CONTENT).send();
 }
 
-export function updatePost(
-  request: PostRequest,
-  response: Response,
-  next: NextFunction,
-) {
+export function updatePost(request: PostRequest, response: Response) {
   let { title, body, tags } = request.body as {
     title?: string;
     body?: string;
-    tags?: string[];
+    tags: string[];
   };
 
-  if (!request.post) {
-    const err: ExpressError = {
-      name: "ExpressError",
-      message: "No post id was provided!",
-      code: STATUS_CODE.BAD_REQUEST,
-    };
-
-    return next(err);
-  }
-
   const updatedPost = store.updatePost(
-    request.post.id,
-    title || request.post.title,
-    body || request.post.body,
-    tags || request.post.tags,
+    (request.post as TPost).id,
+    title || (request.post as TPost).title,
+    body || (request.post as TPost).body,
+    tags || (request.post as TPost).tags,
   );
 
   response.status(STATUS_CODE.OK).send(updatedPost);
 }
 
-export function deletePost(
-  request: PostRequest,
-  response: Response,
-  next: NextFunction,
-) {
-  if (!request.post) {
-    const err: ExpressError = {
-      name: "ExpressError",
-      message: "No post id was provided!",
-      code: STATUS_CODE.BAD_REQUEST,
-    };
-
-    return next(err);
-  }
-
-  store.deletePost(request.post.id);
+export function deletePost(request: PostRequest, response: Response) {
+  store.deletePost((request.post as TPost).id);
   response.status(STATUS_CODE.NO_CONTENT).send();
 }
