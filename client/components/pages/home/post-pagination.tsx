@@ -9,7 +9,7 @@ import {
   PaginationLink,
   PaginationNext,
   PaginationPrevious,
-} from "../ui/pagination";
+} from "@/components/ui/pagination";
 import { serverGetPostsOnPage } from "@/lib/services/post-service";
 import { errorToast } from "@/lib/toasts";
 import clsx from "clsx";

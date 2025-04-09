@@ -16,8 +16,7 @@ import { postSchema, TPostSchema } from "@/lib/form-schemas/post-schema";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { FileImage } from "lucide-react";
 import { useForm, useWatch } from "react-hook-form";
-import PostInputField from "./post-input-field";
-import PostTextareaField from "./post-textarea-field";
+import { PostInputField, PostTextareaField } from "../form-fields";
 
 interface Props {
   submitValues: (values: TPostSchema) => void;

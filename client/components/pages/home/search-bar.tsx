@@ -1,11 +1,8 @@
 "use client";
 
 import { usePosts } from "@/contexts/posts-context";
-import RemovableTagsList from "../removable-tags-list";
-import { Input } from "../ui/input";
 import { useState } from "react";
 import { MAX_TAG_LENGTH } from "@/lib/constants";
-import { Button } from "../ui/button";
 import { Search } from "lucide-react";
 import { errorToast } from "@/lib/toasts";
 import {
@@ -23,6 +20,9 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { TPost } from "common";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import RemovableTagsList from "@/components/removable-tags-list";
 
 export default function SearchBar() {
   const { setPosts, currentPage } = usePosts();
@@ -109,14 +109,17 @@ export default function SearchBar() {
           onKeyDown={handleAddTag}
           className="w-9/12"
         />
+
         <Button onClick={handleSearch}>
           <Search strokeWidth={3} />
         </Button>
+
         <div className="ml-auto flex items-center gap-4">
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline">{ordering}</Button>
             </DropdownMenuTrigger>
+
             <DropdownMenuContent>
               {orderings.map((order, index) => (
                 <DropdownMenuItem
@@ -130,6 +133,7 @@ export default function SearchBar() {
           </DropdownMenu>
         </div>
       </div>
+
       <div>
         <RemovableTagsList tags={tags} handleRemoveTag={handleRemoveTag} />
       </div>

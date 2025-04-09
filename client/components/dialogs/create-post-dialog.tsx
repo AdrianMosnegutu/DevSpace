@@ -2,13 +2,13 @@
 
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
-import PostForm from "../form/post-form";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
 import { errorToast, regularToast } from "@/lib/toasts";
 import { serverCreatePost } from "@/lib/services/post-service";
 import { useState } from "react";
 import { usePosts } from "@/contexts/posts-context";
 import { Plus } from "lucide-react";
+import { PostForm } from "../forms";
 
 export default function CreatePostDialog() {
   const { createPost } = usePosts();

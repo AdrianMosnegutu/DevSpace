@@ -1,2 +1,6 @@
 import Post from "./post";
-export default Post;
+import PostHeader from "./post-header";
+import PostContent from "./post-content";
+import PostFooter from "./post-footer";
+
+export { Post, PostHeader, PostContent, PostFooter };

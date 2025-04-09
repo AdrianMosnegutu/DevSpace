@@ -34,9 +34,11 @@ export default function AppSidebar() {
         <em className="text-primary block not-italic">Dev</em>
         Space
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Application</SidebarGroupLabel>
+
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (

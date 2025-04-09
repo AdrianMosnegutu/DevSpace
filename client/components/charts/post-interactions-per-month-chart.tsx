@@ -39,7 +39,7 @@ interface Props {
   posts: TPost[];
 }
 
-export default function PostInteractionsPerMonth({ posts }: Props) {
+export default function PostInteractionsPerMonthChart({ posts }: Props) {
   const chartData = last12Months.map(({ label, month, year }) => {
     const postsInMonth = posts.filter((post) => {
       const postDate = new Date(post.date);

@@ -1,11 +1,7 @@
 "use client";
 
 import { usePosts } from "@/contexts/posts-context";
-import Post from "../post";
 import clsx, { ClassValue } from "clsx";
-import PostHeader from "../post/post-header";
-import PostContent from "../post/post-content";
-import PostFooter from "../post/post-footer";
 import {
   CalendarArrowDown,
   CalendarArrowUp,
@@ -21,6 +17,7 @@ import {
   serverGetOldestPost,
 } from "@/lib/services/post-service";
 import { errorToast } from "@/lib/toasts";
+import { Post, PostContent, PostFooter, PostHeader } from "@/components/post";
 
 export default function PostsList() {
   const { posts, createPost, updatePost, deletePost } = usePosts();

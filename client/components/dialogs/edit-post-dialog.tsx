@@ -1,10 +1,10 @@
-import PostForm from "../form/post-form";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { TPostSchema } from "@/lib/form-schemas/post-schema";
 import { TPost } from "common";
 import { errorToast, regularToast } from "@/lib/toasts";
 import { serverUpdatePost } from "@/lib/services/post-service";
 import { usePosts } from "@/contexts/posts-context";
+import { PostForm } from "../forms";
 
 type Props = TPost & {
   open: boolean;
