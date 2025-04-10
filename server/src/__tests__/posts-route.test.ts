@@ -7,7 +7,7 @@ const ENDPOINT = "/api/posts";
 describe("/api/posts", () => {
   describe("GET", () => {
     describe("/all", () => {
-      test("received an array", async () => {
+      it("received an array", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -15,7 +15,7 @@ describe("/api/posts", () => {
         expect(Array.isArray(response.body)).toBe(true);
       });
 
-      test("received an array of post responses", async () => {
+      it("received an array of post responses", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -32,7 +32,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`posts array should be of length ${mockPosts.length}`, async () => {
+      it(`posts array should be of length ${mockPosts.length}`, async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -42,7 +42,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test("initial posts are the same as the mock posts", async () => {
+      it("initial posts are the same as the mock posts", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -57,24 +57,24 @@ describe("/api/posts", () => {
     });
 
     describe("?page=...", () => {
-      test("response status is 400 when a page isn't provided", async () => {
+      it("response status is 400 when a page isn't provided", async () => {
         await request(app).get(ENDPOINT).expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test("response status is 400 when a page isn't provided as an integer", async () => {
+      it("response status is 400 when a page isn't provided as an integer", async () => {
         await request(app)
           .get(`${ENDPOINT}?page=test`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test("received an array", async () => {
+      it("received an array", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}?page=0`)
           .expect(STATUS_CODE.OK);
         expect(Array.isArray(response.body)).toBe(true);
       });
 
-      test("received an array of post responses", async () => {
+      it("received an array of post responses", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}?page=0`)
           .expect(STATUS_CODE.OK);
@@ -91,7 +91,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`full page should be of length ${itemsPerPage}`, async () => {
+      it(`full page should be of length ${itemsPerPage}`, async () => {
         const response = await request(app)
           .get(`${ENDPOINT}?page=0`)
           .expect(STATUS_CODE.OK);
@@ -101,7 +101,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`posts on the first page should be the first ${itemsPerPage} from mockPosts`, async () => {
+      it(`posts on the first page should be the first ${itemsPerPage} from mockPosts`, async () => {
         const response = await request(app)
           .get(`${ENDPOINT}?page=0`)
           .expect(STATUS_CODE.OK);
@@ -114,7 +114,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`posts on the second page should be the next ${itemsPerPage} from mockPosts`, async () => {
+      it(`posts on the second page should be the next ${itemsPerPage} from mockPosts`, async () => {
         const response = await request(app)
           .get(`${ENDPOINT}?page=1`)
           .expect(STATUS_CODE.OK);
@@ -129,7 +129,7 @@ describe("/api/posts", () => {
     });
 
     describe("/newest", () => {
-      test("response satisfies the post response object", async () => {
+      it("response satisfies the post response object", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/newest`)
           .expect(STATUS_CODE.OK);
@@ -144,7 +144,7 @@ describe("/api/posts", () => {
         });
       });
 
-      test("the post is the newest in the list", async () => {
+      it("the post is the newest in the list", async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -176,7 +176,7 @@ describe("/api/posts", () => {
     });
 
     describe("/oldest", () => {
-      test("response satisfies the post response object", async () => {
+      it("response satisfies the post response object", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/oldest`)
           .expect(STATUS_CODE.OK);
@@ -191,7 +191,7 @@ describe("/api/posts", () => {
         });
       });
 
-      test("the post is the oldest in the list", async () => {
+      it("the post is the oldest in the list", async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -223,7 +223,7 @@ describe("/api/posts", () => {
     });
 
     describe("/mostLiked", () => {
-      test("response satisfies the post response object", async () => {
+      it("response satisfies the post response object", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/mostLiked`)
           .expect(STATUS_CODE.OK);
@@ -238,7 +238,7 @@ describe("/api/posts", () => {
         });
       });
 
-      test("the post is the most liked in the list", async () => {
+      it("the post is the most liked in the list", async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -267,7 +267,7 @@ describe("/api/posts", () => {
     });
 
     describe("/leastLiked", () => {
-      test("response satisfies the post response object", async () => {
+      it("response satisfies the post response object", async () => {
         const response = await request(app)
           .get(`${ENDPOINT}/leastLiked`)
           .expect(STATUS_CODE.OK);
@@ -282,7 +282,7 @@ describe("/api/posts", () => {
         });
       });
 
-      test("the post is the least liked in the list", async () => {
+      it("the post is the least liked in the list", async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -311,13 +311,13 @@ describe("/api/posts", () => {
     });
 
     describe("/filter", () => {
-      test("response status is 400 when no tags are provided", async () => {
+      it("response status is 400 when no tags are provided", async () => {
         await request(app)
           .get(`${ENDPOINT}/filter`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test("responds with all posts containing the tags", async () => {
+      it("responds with all posts containing the tags", async () => {
         const tags = ["career", "python"];
 
         const allPostsResponse = await request(app)
@@ -339,13 +339,13 @@ describe("/api/posts", () => {
     });
 
     describe("/order/date", () => {
-      test("response status is 400 when a page isn't provided", async () => {
+      it("response status is 400 when a page isn't provided", async () => {
         await request(app)
           .get(`${ENDPOINT}/order/date`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test(`responds with the first ${itemsPerPage} items in order of date`, async () => {
+      it(`responds with the first ${itemsPerPage} items in order of date`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -365,7 +365,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`responds with the next ${itemsPerPage} items in order of date`, async () => {
+      it(`responds with the next ${itemsPerPage} items in order of date`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -387,19 +387,19 @@ describe("/api/posts", () => {
     });
 
     describe("/order/date?descending=true", () => {
-      test("response status is 400 when a page isn't provided", async () => {
+      it("response status is 400 when a page isn't provided", async () => {
         await request(app)
           .get(`${ENDPOINT}/order/date`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test("response status is 400 when a 'descending' isn't true or false", async () => {
+      it("response status is 400 when a 'descending' isn't true or false", async () => {
         await request(app)
           .get(`${ENDPOINT}/order/date?page=0&descending=2`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test(`responds with the first ${itemsPerPage} items in descending order of date`, async () => {
+      it(`responds with the first ${itemsPerPage} items in descending order of date`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -419,7 +419,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`responds with the next ${itemsPerPage} items in descending order of date`, async () => {
+      it(`responds with the next ${itemsPerPage} items in descending order of date`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -441,13 +441,13 @@ describe("/api/posts", () => {
     });
 
     describe("/order/likes", () => {
-      test("response status is 400 when a page isn't provided", async () => {
+      it("response status is 400 when a page isn't provided", async () => {
         await request(app)
           .get(`${ENDPOINT}/order/likes`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test(`responds with the first ${itemsPerPage} items in order of likes`, async () => {
+      it(`responds with the first ${itemsPerPage} items in order of likes`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -465,7 +465,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`responds with the next ${itemsPerPage} items in order of date`, async () => {
+      it(`responds with the next ${itemsPerPage} items in order of date`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -485,19 +485,19 @@ describe("/api/posts", () => {
     });
 
     describe("/order/likes?descending=true", () => {
-      test("response status is 400 when a page isn't provided", async () => {
+      it("response status is 400 when a page isn't provided", async () => {
         await request(app)
           .get(`${ENDPOINT}/order/likes`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test("response status is 400 when a 'descending' isn't true or false", async () => {
+      it("response status is 400 when a 'descending' isn't true or false", async () => {
         await request(app)
           .get(`${ENDPOINT}/order/likes?page=0&descending=2`)
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test(`responds with the first ${itemsPerPage} items in descending order of likes`, async () => {
+      it(`responds with the first ${itemsPerPage} items in descending order of likes`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -515,7 +515,7 @@ describe("/api/posts", () => {
         );
       });
 
-      test(`responds with the next ${itemsPerPage} items in descending order of likes`, async () => {
+      it(`responds with the next ${itemsPerPage} items in descending order of likes`, async () => {
         const allPostsResponse = await request(app)
           .get(`${ENDPOINT}/all`)
           .expect(STATUS_CODE.OK);
@@ -535,11 +535,11 @@ describe("/api/posts", () => {
     });
 
     describe("/:postId", () => {
-      test("response status is 404 when an invalid id is provided", async () => {
+      it("response status is 404 when an invalid id is provided", async () => {
         await request(app).get(`${ENDPOINT}/123`).expect(STATUS_CODE.NOT_FOUND);
       });
 
-      test("post with a given id is the same as in the mock posts", async () => {
+      it("post with a given id is the same as in the mock posts", async () => {
         const id = mockPosts[0].id;
         const response = await request(app)
           .get(`${ENDPOINT}/${id}`)
@@ -555,7 +555,7 @@ describe("/api/posts", () => {
 
   describe("POST", () => {
     describe("/", () => {
-      test("responds with 400 if not all body fields are provided", async () => {
+      it("responds with 400 if not all body fields are provided", async () => {
         await request(app)
           .post(ENDPOINT)
           .send({ title: "test" })
@@ -597,7 +597,7 @@ describe("/api/posts", () => {
           .expect(STATUS_CODE.BAD_REQUEST);
       });
 
-      test("post is created and appears inside the list", async () => {
+      it("post is created and appears inside the list", async () => {
         const postResponse = await request(app)
           .post(ENDPOINT)
           .send({
@@ -623,13 +623,13 @@ describe("/api/posts", () => {
 
   describe("PUT", () => {
     describe("/:postId/like", () => {
-      test("response status is 404 when the id is invalid", async () => {
+      it("response status is 404 when the id is invalid", async () => {
         await request(app)
           .put(`${ENDPOINT}/1323/like`)
           .expect(STATUS_CODE.NOT_FOUND);
       });
 
-      test("added a like to the specified post", async () => {
+      it("added a like to the specified post", async () => {
         const { id, likes } = (
           await request(app).get(`${ENDPOINT}/all`).expect(STATUS_CODE.OK)
         ).body[0] as TPostResponse;
@@ -654,13 +654,13 @@ describe("/api/posts", () => {
 
   describe("PATCH", () => {
     describe("/:postId", () => {
-      test("response status is 404 when the id is invalid", async () => {
+      it("response status is 404 when the id is invalid", async () => {
         await request(app)
           .patch(`${ENDPOINT}/1323`)
           .expect(STATUS_CODE.NOT_FOUND);
       });
 
-      test("post is updated inside the list", async () => {
+      it("post is updated inside the list", async () => {
         const { id } = (
           await request(app).get(`${ENDPOINT}/all`).expect(STATUS_CODE.OK)
         ).body[0] as TPostResponse;
@@ -702,13 +702,13 @@ describe("/api/posts", () => {
 
   describe("DELETE", () => {
     describe("/:postId", () => {
-      test("response status is 404 when the id is invalid", async () => {
+      it("response status is 404 when the id is invalid", async () => {
         await request(app)
           .delete(`${ENDPOINT}/1323`)
           .expect(STATUS_CODE.NOT_FOUND);
       });
 
-      test("post is deleted from the list", async () => {
+      it("post is deleted from the list", async () => {
         const oldPost = (
           await request(app).get(`${ENDPOINT}/all`).expect(STATUS_CODE.OK)
         ).body[0] as TPostResponse;
@@ -730,13 +730,13 @@ describe("/api/posts", () => {
     });
 
     describe("/:postId/like", () => {
-      test("response status is 404 when the id is invalid", async () => {
+      it("response status is 404 when the id is invalid", async () => {
         await request(app)
           .delete(`${ENDPOINT}/1323/like`)
           .expect(STATUS_CODE.NOT_FOUND);
       });
 
-      test("deleted a like to the specified post", async () => {
+      it("deleted a like to the specified post", async () => {
         const { id } = (
           await request(app).get(`${ENDPOINT}/all`).expect(STATUS_CODE.OK)
         ).body[0] as TPostResponse;
@@ -773,25 +773,25 @@ describe("/api/posts", () => {
       );
     });
 
-    test("response code is 404 if fetching the newest post and the post list is empty", async () => {
+    it("response code is 404 if fetching the newest post and the post list is empty", async () => {
       await request(app)
         .get(`${ENDPOINT}/newest`)
         .expect(STATUS_CODE.NOT_FOUND);
     });
 
-    test("response code is 404 if fetching the oldest post and the post list is empty", async () => {
+    it("response code is 404 if fetching the oldest post and the post list is empty", async () => {
       await request(app)
         .get(`${ENDPOINT}/oldest`)
         .expect(STATUS_CODE.NOT_FOUND);
     });
 
-    test("response code is 404 if fetching the most liked post and the post list is empty", async () => {
+    it("response code is 404 if fetching the most liked post and the post list is empty", async () => {
       await request(app)
         .get(`${ENDPOINT}/mostLiked`)
         .expect(STATUS_CODE.NOT_FOUND);
     });
 
-    test("response code is 404 if fetching the least liked post and the post list is empty", async () => {
+    it("response code is 404 if fetching the least liked post and the post list is empty", async () => {
       await request(app)
         .get(`${ENDPOINT}/leastLiked`)
         .expect(STATUS_CODE.NOT_FOUND);
