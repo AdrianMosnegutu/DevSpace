@@ -66,10 +66,11 @@ export default function PostsList() {
       .catch((error) => errorToast("Could not get statistical posts!", error));
   }, [createPost, updatePost, deletePost]);
 
-  const mostLikedClass: ClassValue = "border-amber-500 bg-amber-50";
-  const leastLikedClass: ClassValue = "border-red-500 bg-red-50";
-  const newestClass: ClassValue = "border-green-500 bg-green-50";
-  const oldestClass: ClassValue = "border-blue-500 bg-blue-50";
+  const mostLikedClass: ClassValue =
+    "border-amber-500 bg-amber-50 dark:bg-amber-950";
+  const leastLikedClass: ClassValue = "border-red-500 bg-red-50 dark:bg-red-950";
+  const newestClass: ClassValue = "border-green-500 bg-green-50 dark:bg-green-950";
+  const oldestClass: ClassValue = "border-blue-500 bg-blue-50 dark:bg-blue-950";
 
   function getClassName(id: string): ClassValue {
     switch (id) {
@@ -97,28 +98,28 @@ export default function PostsList() {
         >
           <div className="flex items-center gap-8 px-6">
             {post.id === mostLikedPost?.id && (
-              <h1 className="flex items-center gap-2 font-bold text-amber-600">
+              <h1 className="flex items-center gap-2 font-bold text-amber-600 dark:text-amber-500">
                 <Crown />
                 Most Liked
               </h1>
             )}
 
             {post.id === leastLikedPost?.id && (
-              <h1 className="flex items-center gap-2 font-bold text-red-600">
+              <h1 className="flex items-center gap-2 font-bold text-red-600 dark:text-red-500">
                 <HeartCrack />
                 Least Liked
               </h1>
             )}
 
             {post.id === newestPost?.id && (
-              <h1 className="flex items-center gap-2 font-bold text-green-600">
+              <h1 className="flex items-center gap-2 font-bold text-green-600 dark:text-green-500">
                 <CalendarArrowUp />
                 Newest
               </h1>
             )}
 
             {post.id === oldestPost?.id && (
-              <h1 className="flex items-center gap-2 font-bold text-blue-600">
+              <h1 className="flex items-center gap-2 font-bold text-blue-600 dark:text-blue-500">
                 <CalendarArrowDown />
                 Oldest
               </h1>

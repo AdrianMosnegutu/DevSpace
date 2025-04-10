@@ -24,15 +24,16 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" className="dark">
       <body className={`${robotoSans.className} antialiased`}>
         <SidebarProvider>
           <AppSidebar />
+          <Toaster position="top-right" />
+
           <main className="w-full">
             <SidebarTrigger />
             {children}
           </main>
-          <Toaster position="top-right" />
         </SidebarProvider>
       </body>
     </html>
