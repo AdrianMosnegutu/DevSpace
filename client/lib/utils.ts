@@ -6,11 +6,22 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Calculates the time elapsed between a given date and the current time,
- * returning a human-readable string describing the duration (e.g., "2 years ago").
+ * Calculates the time difference between a given date and the current time.
  *
- * @param date - The past date to compare with the current time.
- * @returns A string describing how long ago the date was.
+ * @param date The date to calculate the time difference from.
+ * @returns A string representing the time difference in a human-readable format,
+ *          such as "1 year ago", "2 months ago", or "3 days ago".
+ * @throws {Error} If the input `date` is not a valid Date object.
+ *
+ * @example
+ * // Returns "1 day ago"
+ * const pastDate = new Date(2023, 11, 20, 10, 0, 0);
+ * timeSince(pastDate);
+ *
+ * @example
+ * // Returns "1 week ago"
+ * const anotherPastDate = new Date(2023, 11, 18, 10, 0, 0);
+ * timeSince(anotherPastDate);
  */
 export function timeSince(date: Date): string {
   const now = new Date();

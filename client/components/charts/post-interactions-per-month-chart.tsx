@@ -16,7 +16,7 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TPost } from "common";
+import { usePosts } from "@/contexts/posts-context";
 
 const chartConfig = {
   likes: {
@@ -35,11 +35,9 @@ const last12Months = Array.from({ length: 12 }, (_, i) => {
   };
 }).reverse();
 
-interface Props {
-  posts: TPost[];
-}
+export default function PostInteractionsPerMonthChart() {
+  const { posts } = usePosts();
 
-export default function PostInteractionsPerMonthChart({ posts }: Props) {
   const chartData = last12Months.map(({ label, month, year }) => {
     const postsInMonth = posts.filter((post) => {
       const postDate = new Date(post.date);

@@ -18,12 +18,8 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TPost } from "common";
 import { useMemo } from "react";
-
-interface Props {
-  posts: TPost[];
-}
+import { usePosts } from "@/contexts/posts-context";
 
 const chartColors: string[] = [
   "hsl(0, 70%, 60%)", // Soft Red
@@ -38,7 +34,9 @@ const chartColors: string[] = [
   "hsl(330, 70%, 60%)", // Rosy Pink
 ];
 
-export default function PostTagsChart({ posts }: Props) {
+export default function PostTagsChart() {
+  const { posts } = usePosts();
+
   // Count occurrences of each tag
   const tagCounts: { [key: string]: number } = {};
   posts.forEach((post) => {

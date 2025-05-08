@@ -5,6 +5,7 @@
   "main": "index.js",
   "license": "MIT",
   "scripts": {
+    "test": "yarn workspace server test",
     "dev": "concurrently \"yarn workspace server dev\" \"yarn workspace client dev\""
   },
   "workspaces": [

@@ -8,7 +8,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-import { TPost } from "common";
 import {
   Card,
   CardContent,
@@ -16,6 +15,7 @@ import {
   CardHeader,
   CardTitle,
 } from "../ui/card";
+import { usePosts } from "@/contexts/posts-context";
 
 const now = new Date();
 
@@ -32,11 +32,9 @@ const chartConfig = {
   posts: { label: "Posts" },
 } satisfies ChartConfig;
 
-interface Props {
-  posts: TPost[];
-}
+export default function PostsPerMonthChart() {
+  const { posts } = usePosts();
 
-export default function PostsPerMonthChart({ posts }: Props) {
   const chartData = last12Months.map(({ label, year, month }) => ({
     month: label,
     posts: posts.filter(
