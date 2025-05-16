@@ -1,7 +1,7 @@
 "use client";
 
 import React, { createContext, useState, ReactNode, useContext } from "react";
-import { TPost, TPostsContext } from "common";
+import { TPost, TPostsContext } from "@/common";
 
 interface PostProviderProps {
   posts: TPost[];
