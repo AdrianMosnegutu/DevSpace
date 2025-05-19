@@ -1,3 +1,54 @@
-node_modules/
-coverage/
+# .NET build stuff
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Runtime files
+*.log
+*.vspscc
+*.vssscc
+*.db-shm
+*.db-wal
+
+# EF Core Migrations (optional - keep Migrations/ if you track them)
+# Migrations/
+
+# SQLite/Dev DBs
+*.db
+*.sqlite
+
+# OS junk
+.DS_Store
+.AppleDouble
+.LSOverride
+Icon?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# VS Code
+.vscode/
+.history/
+
+# JetBrains Rider/IDEA (optional)
+.idea/
+*.sln.iml
+
+# User secrets
+secrets.json
+
+# dotnet user-specific files
+*.dotnet-tools.json
+
+# Others
 .env
+*.pfx
+*.cer
+*.key
+
+.fake

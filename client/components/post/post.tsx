@@ -1,4 +1,4 @@
-import { TPost } from "common";
+import { TPost } from "@/common";
 import { Card } from "../ui/card";
 import clsx from "clsx";
 import { ReactNode } from "react";

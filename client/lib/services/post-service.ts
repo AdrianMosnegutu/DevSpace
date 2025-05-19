@@ -1,45 +1,23 @@
 import axios from "axios";
-import { TPost, TPostResponse } from "common";
+import { TPost, TPostResponse } from "@/common";
 import { TPostSchema } from "../form-schemas/post-schema";
 
 const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
 const POSTS_ENDPOINT = BACKEND_URL + "/api/posts";
 
 function postResponseToObject(post: TPostResponse): TPost {
-  return { ...post, date: new Date(post.date) };
+  return { ...post, publishedAt: new Date(post.publishedAt) };
 }
 
 function postResponsesToObjects(posts: TPostResponse[]): TPost[] {
+  if (!posts) {
+    return [];
+  }
   return posts.map((post) => postResponseToObject(post));
 }
 
 export async function serverGetAllPosts(): Promise<TPost[]> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/all`);
-  return postResponsesToObjects(response.data as TPostResponse[]);
-}
-
-export async function serverGetOldestPost(): Promise<TPost> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/oldest`);
-  return postResponseToObject(response.data as TPostResponse);
-}
-
-export async function serverGetMostLikedPost(): Promise<TPost> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/mostLiked`);
-  return postResponseToObject(response.data as TPostResponse);
-}
-
-export async function serverGetLeastLikedPost(): Promise<TPost> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/leastLiked`);
-  return postResponseToObject(response.data as TPostResponse);
-}
-
-export async function serverGetNewestPost(): Promise<TPost> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/newest`);
-  return postResponseToObject(response.data as TPostResponse);
-}
-
-export async function serverGetPostsOnPage(page: number): Promise<TPost[]> {
-  const response = await axios.get(`${POSTS_ENDPOINT}?page=${page}`);
+  const response = await axios.get(`${POSTS_ENDPOINT}`);
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
@@ -60,12 +38,12 @@ export async function serverDeletePost(id: string) {
   await axios.delete(`${POSTS_ENDPOINT}/${id}`);
 }
 
-export async function serverLikePost(id: string) {
-  await axios.put(`${POSTS_ENDPOINT}/${id}/like`);
-}
-
-export async function serverUnlikePost(id: string) {
-  await axios.delete(`${POSTS_ENDPOINT}/${id}/like`);
+export async function serverVotePost(id: string, value: number) {
+  await axios.patch(`${POSTS_ENDPOINT}/${id}/vote`, value.toString(), {
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 }
 
 export async function serverGetPostsWithTags(tags: string[]): Promise<TPost[]> {
@@ -76,36 +54,26 @@ export async function serverGetPostsWithTags(tags: string[]): Promise<TPost[]> {
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
-export async function serverGetPostsOrderedLikesAscending(
-  page: number,
-): Promise<TPost[]> {
+export async function serverGetPostsOrderedLikesAscending(): Promise<TPost[]> {
+  const response = await axios.get(`${POSTS_ENDPOINT}?sort=upvotes`);
+  return postResponsesToObjects(response.data as TPostResponse[]);
+}
+
+export async function serverGetPostsOrderedLikesDescending(): Promise<TPost[]> {
   const response = await axios.get(
-    `${POSTS_ENDPOINT}/order/likes?page=${page}`,
+    `${POSTS_ENDPOINT}?sort=upvotes&descending=true`,
   );
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
-export async function serverGetPostsOrderedLikesDescending(
-  page: number,
-): Promise<TPost[]> {
+export async function serverGetPostsOrderedDateAscending(): Promise<TPost[]> {
   const response = await axios.get(
-    `${POSTS_ENDPOINT}/order/likes?page=${page}&descending=true`,
+    `${POSTS_ENDPOINT}?sort=date&descending=true`,
   );
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 
-export async function serverGetPostsOrderedDateAscending(
-  page: number,
-): Promise<TPost[]> {
-  const response = await axios.get(`${POSTS_ENDPOINT}/order/date?page=${page}`);
-  return postResponsesToObjects(response.data as TPostResponse[]);
-}
-
-export async function serverGetPostsOrderedDateDescending(
-  page: number,
-): Promise<TPost[]> {
-  const response = await axios.get(
-    `${POSTS_ENDPOINT}/order/date?page=${page}&descending=true`,
-  );
+export async function serverGetPostsOrderedDateDescending(): Promise<TPost[]> {
+  const response = await axios.get(`${POSTS_ENDPOINT}?sort=date`);
   return postResponsesToObjects(response.data as TPostResponse[]);
 }

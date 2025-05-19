@@ -1,10 +1,17 @@
 "use client";
 
+import { TPost } from "@/common";
+import RemovableTagsList from "@/components/removable-tags-list";
+import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import { usePosts } from "@/contexts/posts-context";
-import { useState } from "react";
 import { MAX_TAG_LENGTH } from "@/lib/constants";
-import { Search } from "lucide-react";
-import { errorToast } from "@/lib/toasts";
 import {
   serverGetAllPosts,
   serverGetPostsOrderedDateAscending,
@@ -13,36 +20,29 @@ import {
   serverGetPostsOrderedLikesDescending,
   serverGetPostsWithTags,
 } from "@/lib/services/post-service";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { TPost } from "common";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import RemovableTagsList from "@/components/removable-tags-list";
+import { errorToast } from "@/lib/toasts";
+import { Search } from "lucide-react";
+import { useState } from "react";
 
 export default function SearchBar() {
-  const { setPosts, currentPage } = usePosts();
+  const { setPosts } = usePosts();
 
   const orderings = [
     {
       name: "Newest",
-      serverFunction: () => serverGetPostsOrderedDateAscending(currentPage),
+      serverFunction: () => serverGetPostsOrderedDateAscending(),
     },
     {
       name: "Oldest",
-      serverFunction: () => serverGetPostsOrderedDateDescending(currentPage),
+      serverFunction: () => serverGetPostsOrderedDateDescending(),
     },
     {
       name: "Least Liked",
-      serverFunction: () => serverGetPostsOrderedLikesAscending(currentPage),
+      serverFunction: () => serverGetPostsOrderedLikesAscending(),
     },
     {
       name: "Most Liked",
-      serverFunction: () => serverGetPostsOrderedLikesDescending(currentPage),
+      serverFunction: () => serverGetPostsOrderedLikesDescending(),
     },
   ];
 
