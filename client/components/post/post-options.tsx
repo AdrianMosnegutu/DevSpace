@@ -13,7 +13,7 @@ import {
 import { useState } from "react";
 import DeletePostDialog from "../dialogs/delete-post-dialog";
 import EditPostDialog from "../dialogs/edit-post-dialog";
-import { TPost } from "common";
+import { TPost } from "@/common";
 
 export default function PostOptions(post: TPost) {
   const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
