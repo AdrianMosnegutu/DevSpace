@@ -1,7 +1,7 @@
 import { TComment, TCommentResponse } from "@/common";
 import axios from "axios";
 
-const BACKEND_URL = process.env.NEXT_PUBLIC_BACKEND_URL;
+const BACKEND_URL = "https://devspace-backend-iyrj.onrender.com";
 const COMMENTS_ENDPOINT = BACKEND_URL + "/api/comments";
 
 function commentResponseToObject(comment: TCommentResponse): TComment {
