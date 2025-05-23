@@ -31,13 +31,14 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowFrontend", policy =>
     {
         policy
-            .WithOrigins("http://localhost:3000")
+            .WithOrigins("https://devspace-frontend.onrender.com")
             .AllowAnyMethod()
             .AllowAnyHeader();
     });
 });
 
 var app = builder.Build();
+app.UseCors("AllowFrontend");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -51,6 +52,5 @@ if (app.Environment.IsDevelopment())
 
 app.MapControllers();
 app.UseHttpsRedirection();
-app.UseCors("AllowFrontend");
 
 app.Run();
