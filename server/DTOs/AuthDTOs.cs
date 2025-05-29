@@ -15,6 +15,7 @@ public record LoginRequest(
 
 public record AuthResponse(
     string Token,
+    string Id,
     string Username,
     string Email
 ); 

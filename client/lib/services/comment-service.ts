@@ -1,5 +1,5 @@
 import { TComment, TCommentResponse } from "@/common";
-import axios from "axios";
+import axios from "@/lib/axios";
 
 const BACKEND_URL = "http://localhost:5000";
 const COMMENTS_ENDPOINT = BACKEND_URL + "/api/comments";
@@ -24,7 +24,13 @@ export async function serverCreateComment(values: {
   body: string;
   postId: string;
 }): Promise<TComment> {
-  const response = await axios.post(COMMENTS_ENDPOINT, values);
+  const response = await axios.post(COMMENTS_ENDPOINT, {
+    body: values.body,
+    postId: values.postId,
+    upvotes: 0,
+    publishedAt: new Date().toISOString(),
+    userId: "00000000-0000-0000-0000-000000000000" // The server will replace this with the actual user ID from the JWT token
+  });
   return commentResponseToObject(response.data as TCommentResponse);
 }
 

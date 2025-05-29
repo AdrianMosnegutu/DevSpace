@@ -10,7 +10,7 @@ public class GenericRepository<TEntity>(AppDbContext context) : IRepository<TEnt
 
     protected readonly DbSet<TEntity> Set = context.Set<TEntity>();
 
-    public async Task<IEnumerable<TEntity>> GetAllAsync()
+    public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
     {
         return await Set.ToListAsync();
     }
@@ -26,7 +26,7 @@ public class GenericRepository<TEntity>(AppDbContext context) : IRepository<TEnt
         return await query.ToListAsync();
     }
 
-    public async Task<TEntity?> GetByIdAsync(Guid id)
+    public virtual async Task<TEntity?> GetByIdAsync(Guid id)
     {
         return await Set.FindAsync(id);
     }

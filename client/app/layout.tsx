@@ -9,8 +9,8 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: "Homework App",
-  description: "A simple homework management application",
+  title: "Devspace",
+  description: "A developer community platform for sharing knowledge and experiences",
 };
 
 export default function RootLayout({

@@ -1,3 +1,5 @@
+"use client";
+
 import { TComment } from "@/common";
 import { Button } from "@/components/ui/button";
 import {
@@ -7,11 +9,12 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
+import { useAuth } from "@/contexts/AuthContext";
+import { serverGetCommentsForPost } from "@/lib/services/comment-service";
 import { ChevronDown } from "lucide-react";
 import { useEffect, useState } from "react";
 import Comment from "./comment";
 import { CommentForm } from "./comment-form";
-import { serverGetCommentsForPost } from "@/lib/services/comment-service";
 
 interface CommentsListProps {
   postId: string;
@@ -24,6 +27,7 @@ export default function CommentsList({ postId }: CommentsListProps) {
   const [sortOrder, setSortOrder] = useState<"newest" | "oldest" | "mostVoted">(
     "newest",
   );
+  const { isAuthenticated } = useAuth();
 
   const fetchComments = async () => {
     setIsLoading(true);
@@ -39,7 +43,7 @@ export default function CommentsList({ postId }: CommentsListProps) {
 
   useEffect(() => {
     fetchComments();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [postId]);
 
   const handleCommentAdded = () => {
@@ -108,11 +112,17 @@ export default function CommentsList({ postId }: CommentsListProps) {
         </DropdownMenu>
       </div>
 
-      <CommentForm
-        postId={postId}
-        onSuccess={handleCommentAdded}
-        onCancel={() => {}}
-      />
+      {isAuthenticated ? (
+        <CommentForm
+          postId={postId}
+          onSuccess={handleCommentAdded}
+          onCancel={() => { }}
+        />
+      ) : (
+        <div className="text-center text-muted-foreground py-4">
+          Please log in to leave a comment
+        </div>
+      )}
 
       <div className="space-y-4">
         {sortedComments.map((comment) => (

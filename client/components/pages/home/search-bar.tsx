@@ -4,21 +4,21 @@ import { TPost } from "@/common";
 import RemovableTagsList from "@/components/removable-tags-list";
 import { Button } from "@/components/ui/button";
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { usePosts } from "@/contexts/posts-context";
 import { MAX_TAG_LENGTH } from "@/lib/constants";
 import {
-  serverGetAllPosts,
-  serverGetPostsOrderedDateAscending,
-  serverGetPostsOrderedDateDescending,
-  serverGetPostsOrderedLikesAscending,
-  serverGetPostsOrderedLikesDescending,
-  serverGetPostsWithTags,
+    serverGetAllPosts,
+    serverGetPostsOrderedDateAscending,
+    serverGetPostsOrderedDateDescending,
+    serverGetPostsOrderedLikesAscending,
+    serverGetPostsOrderedLikesDescending,
+    serverGetPostsWithTags,
 } from "@/lib/services/post-service";
 import { errorToast } from "@/lib/toasts";
 import { Search } from "lucide-react";
@@ -101,37 +101,35 @@ export default function SearchBar() {
 
   return (
     <div className="flex w-full flex-col gap-4">
-      <div className="flex">
+      <div className="flex w-full gap-4">
         <Input
           placeholder="Search tags..."
           value={inputTag}
           onChange={(e) => setInputTag(e.target.value)}
           onKeyDown={handleAddTag}
-          className="w-9/12"
+          className="flex-1"
         />
 
         <Button onClick={handleSearch}>
           <Search strokeWidth={3} />
         </Button>
 
-        <div className="ml-auto flex items-center gap-4">
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="outline">{ordering}</Button>
-            </DropdownMenuTrigger>
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="outline">{ordering}</Button>
+          </DropdownMenuTrigger>
 
-            <DropdownMenuContent>
-              {orderings.map((order, index) => (
-                <DropdownMenuItem
-                  key={index}
-                  onSelect={() => handleOrder(order)}
-                >
-                  {order.name}
-                </DropdownMenuItem>
-              ))}
-            </DropdownMenuContent>
-          </DropdownMenu>
-        </div>
+          <DropdownMenuContent>
+            {orderings.map((order, index) => (
+              <DropdownMenuItem
+                key={index}
+                onSelect={() => handleOrder(order)}
+              >
+                {order.name}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
 
       <div>

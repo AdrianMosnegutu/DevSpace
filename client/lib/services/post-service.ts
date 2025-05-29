@@ -1,23 +1,49 @@
-import axios from "axios";
 import { TPost, TPostResponse } from "@/common";
+import axios from "@/lib/axios";
 import { TPostSchema } from "../form-schemas/post-schema";
+import { serverGetUserById } from "./user-service";
 
 const BACKEND_URL = "http://localhost:5000";
 const POSTS_ENDPOINT = BACKEND_URL + "/api/posts";
 
-function postResponseToObject(post: TPostResponse): TPost {
-  return { ...post, publishedAt: new Date(post.publishedAt) };
+async function postResponseToObject(post: TPostResponse): Promise<TPost> {
+  console.log('Post response:', post);
+  console.log('Post userId:', post.userId);
+  
+  // Ensure the user ID is a valid GUID
+  const userId = post.userId.replace(/[^0-9a-fA-F-]/g, '');
+  
+  // Fetch user data using the userId
+  const user = await serverGetUserById(userId);
+  console.log('Fetched user:', user);
+  
+  return { 
+    ...post, 
+    publishedAt: new Date(post.publishedAt),
+    userId: userId,
+    user: {
+      username: user.username
+    }
+  };
 }
 
-function postResponsesToObjects(posts: TPostResponse[]): TPost[] {
+async function postResponsesToObjects(posts: TPostResponse[]): Promise<TPost[]> {
   if (!posts) {
     return [];
   }
-  return posts.map((post) => postResponseToObject(post));
+  console.log('Posts response:', posts);
+  console.log('Posts userIds:', posts.map(p => p.userId));
+  return Promise.all(posts.map((post) => postResponseToObject(post)));
+}
+
+export async function serverGetPost(id: string): Promise<TPost> {
+  const response = await axios.get(`${POSTS_ENDPOINT}/${id}`);
+  return postResponseToObject(response.data as TPostResponse);
 }
 
 export async function serverGetAllPosts(): Promise<TPost[]> {
   const response = await axios.get(`${POSTS_ENDPOINT}`);
+  console.log('Server response:', response.data);
   return postResponsesToObjects(response.data as TPostResponse[]);
 }
 

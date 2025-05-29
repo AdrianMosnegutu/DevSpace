@@ -3,6 +3,10 @@ export interface TPostBase {
   body: string;
   postTags: string[];
   upvotes: number;
+  userId: string;
+  user: {
+    username: string;
+  };
 }
 
 export interface TPost extends TPostBase {

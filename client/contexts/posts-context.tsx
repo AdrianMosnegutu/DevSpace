@@ -1,7 +1,7 @@
 "use client";
 
-import React, { createContext, useState, ReactNode, useContext } from "react";
 import { TPost, TPostsContext } from "@/common";
+import React, { createContext, ReactNode, useContext, useMemo, useState } from "react";
 
 interface PostProviderProps {
   posts: TPost[];
@@ -26,6 +26,40 @@ export const PostProvider: React.FC<PostProviderProps> = ({
 }) => {
   const [posts, setPosts] = useState<TPost[]>(initialPosts);
   const [currentPage, setCurrentPage] = useState<number>(0);
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortOrder, setSortOrder] = useState<string>("date-desc");
+
+  const filteredAndSortedPosts = useMemo(() => {
+    let result = [...posts];
+
+    // Apply search filter
+    if (searchQuery) {
+      const query = searchQuery.toLowerCase();
+      result = result.filter(
+        (post) =>
+          post.title.toLowerCase().includes(query) ||
+          post.body.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply sorting
+    switch (sortOrder) {
+      case "date-desc":
+        result.sort((a, b) => b.publishedAt.getTime() - a.publishedAt.getTime());
+        break;
+      case "date-asc":
+        result.sort((a, b) => a.publishedAt.getTime() - b.publishedAt.getTime());
+        break;
+      case "likes-desc":
+        result.sort((a, b) => b.upvotes - a.upvotes);
+        break;
+      case "likes-asc":
+        result.sort((a, b) => a.upvotes - b.upvotes);
+        break;
+    }
+
+    return result;
+  }, [posts, searchQuery, sortOrder]);
 
   const createPost = (post: TPost) => {
     setPosts((prevPosts) => [post, ...prevPosts]);
@@ -54,7 +88,7 @@ export const PostProvider: React.FC<PostProviderProps> = ({
   return (
     <PostContext.Provider
       value={{
-        posts,
+        posts: filteredAndSortedPosts,
         setPosts,
         createPost,
         deletePost,
@@ -62,6 +96,8 @@ export const PostProvider: React.FC<PostProviderProps> = ({
         currentPage,
         incrementPage,
         decrementPage,
+        setSearchQuery,
+        setSortOrder,
       }}
     >
       {children}

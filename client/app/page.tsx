@@ -1,21 +1,22 @@
-import CreatePostDialog from "@/components/dialogs/create-post-dialog";
-import { PostsList, SearchBar } from "@/components/pages/home";
+import CreatePostButton from "@/components/pages/home/create-post-button";
+import PostsControls from "@/components/pages/home/posts-controls";
+import PostsList from "@/components/pages/home/posts-list";
 import { PostProvider } from "@/contexts/posts-context";
-import { serverGetPostsOrderedDateAscending } from "@/lib/services/post-service";
+import { serverGetAllPosts } from "@/lib/services/post-service";
 
 export default async function HomePage() {
-  const posts = await serverGetPostsOrderedDateAscending();
+  const posts = await serverGetAllPosts();
 
   return (
-    <PostProvider posts={posts}>
-      <CreatePostDialog />
-
-      <div className="flex">
-        <div className="m-auto w-3/5 flex max-w-4xl flex-col items-center py-8">
-          <SearchBar />
-          <PostsList />
+    <div className="max-w-4xl mx-auto py-8 px-4">
+      <PostProvider posts={posts}>
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Recent Posts</h1>
+          <CreatePostButton />
         </div>
-      </div>
-    </PostProvider>
+        <PostsControls />
+        <PostsList />
+      </PostProvider>
+    </div>
   );
 }

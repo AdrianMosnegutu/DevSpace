@@ -1,50 +1,52 @@
-'use client';
-
-import { TComment } from "@/common";
+import { TPost } from "@/common";
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { useAuth } from "@/contexts/AuthContext";
-import { serverDeleteComment, serverVoteComment } from "@/lib/services/comment-service";
+import { serverDeletePost, serverVotePost } from "@/lib/services/post-service";
 import { timeSince } from "@/lib/utils";
 import { Pencil, ThumbsDown, ThumbsUp, Trash2 } from "lucide-react";
+import Link from "next/link";
 import { useState } from "react";
-import { CommentForm } from "./comment-form";
+import { PostForm } from "./post-form";
 
-interface CommentProps extends TComment {
+interface PostProps extends TPost {
   onDelete?: () => void;
 }
 
-export default function Comment({ id, body, upvotes, publishedAt, userId, onDelete }: CommentProps) {
+export default function Post({ id, title, body, upvotes, publishedAt, userId, onDelete }: PostProps) {
   const [isEditing, setIsEditing] = useState(false);
-  const [commentBody, setCommentBody] = useState(body);
+  const [postTitle, setPostTitle] = useState(title);
+  const [postBody, setPostBody] = useState(body);
   const [votes, setVotes] = useState(upvotes);
   const { user, isAuthenticated } = useAuth();
   const isAuthor = user?.id === userId;
 
   const handleDelete = async () => {
-    if (confirm("Are you sure you want to delete this comment?")) {
-      await serverDeleteComment(id);
+    if (confirm("Are you sure you want to delete this post?")) {
+      await serverDeletePost(id);
       onDelete?.();
     }
   };
 
   const handleVote = async (value: number) => {
     if (!isAuthenticated) {
-      alert("Please log in to vote on comments");
+      alert("Please log in to vote on posts");
       return;
     }
-    await serverVoteComment(id, value);
+    await serverVotePost(id, value);
     setVotes(prev => prev + value);
   };
 
   if (isEditing) {
     return (
-      <CommentForm
-        initialBody={commentBody}
-        commentId={id}
+      <PostForm
+        initialTitle={postTitle}
+        initialBody={postBody}
+        postId={id}
         onCancel={() => setIsEditing(false)}
-        onSuccess={(newBody) => {
-          setCommentBody(newBody);
+        onSuccess={(newTitle, newBody) => {
+          setPostTitle(newTitle);
+          setPostBody(newBody);
           setIsEditing(false);
         }}
       />
@@ -53,11 +55,16 @@ export default function Comment({ id, body, upvotes, publishedAt, userId, onDele
 
   return (
     <Card className="mb-4">
-      <CardContent className="pt-6">
-        <p className="text-sm text-gray-500 mb-2">
+      <CardHeader>
+        <Link href={`/posts/${id}`} className="hover:underline">
+          <h2 className="text-xl font-semibold">{postTitle}</h2>
+        </Link>
+        <p className="text-sm text-gray-500">
           {timeSince(new Date(publishedAt))}
         </p>
-        <p className="text-base">{commentBody}</p>
+      </CardHeader>
+      <CardContent>
+        <p className="text-base">{postBody}</p>
       </CardContent>
       <CardFooter className="flex justify-between items-center">
         <div className="flex items-center gap-2">
@@ -104,4 +111,4 @@ export default function Comment({ id, body, upvotes, publishedAt, userId, onDele
       </CardFooter>
     </Card>
   );
-}
+} 

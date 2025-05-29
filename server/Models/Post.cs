@@ -22,7 +22,7 @@ public class Post
 
     // User relationship
     public Guid UserId { get; set; }
-    public User User { get; set; } = null!;
+    public User? User { get; set; }
 
     // Navigation properties
     public ICollection<Comment> Comments { get; set; } = [];

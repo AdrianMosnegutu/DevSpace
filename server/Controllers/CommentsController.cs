@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Server.Models;
 using Server.Repositories;
 
@@ -90,7 +91,7 @@ public class CommentsController(CommentsRepository repository, ILogger<CommentsC
         try
         {
             // Get the user ID from the JWT token
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized("User ID not found in token");
@@ -131,7 +132,7 @@ public class CommentsController(CommentsRepository repository, ILogger<CommentsC
             }
 
             // Verify that the user owns the comment
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null || existingComment.UserId != Guid.Parse(userId))
             {
                 return Unauthorized("You are not authorized to update this comment");
@@ -167,7 +168,7 @@ public class CommentsController(CommentsRepository repository, ILogger<CommentsC
             }
 
             // Verify that the user owns the comment
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null || comment.UserId != Guid.Parse(userId))
             {
                 return Unauthorized("You are not authorized to delete this comment");

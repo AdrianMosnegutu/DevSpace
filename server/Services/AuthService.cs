@@ -75,6 +75,7 @@ public class AuthService : IAuthService
 
         return new AuthResponse(
             Token: tokenHandler.WriteToken(token),
+            Id: user.Id.ToString(),
             Username: user.Username,
             Email: user.Email
         );

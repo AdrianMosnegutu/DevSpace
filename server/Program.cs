@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Server.Data;
+using Server.Models;
 using Server.Repositories;
 using Server.Services;
 
@@ -66,6 +67,7 @@ builder.Services.AddScoped<PostsRepository>();
 builder.Services.AddScoped<CommentsRepository>();
 builder.Services.AddScoped<TagsRepository>();
 builder.Services.AddScoped<PostTagsRepository>();
+builder.Services.AddScoped<GenericRepository<User>>();
 
 builder.Services.AddControllers();
 

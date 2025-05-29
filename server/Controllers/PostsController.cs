@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 using Server.Models;
 using Server.Repositories;
 
@@ -71,7 +72,7 @@ public sealed class PostsController(PostsRepository repository, ILogger<PostsCon
         try
         {
             // Get the user ID from the JWT token
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null)
             {
                 return Unauthorized("User ID not found in token");
@@ -112,7 +113,7 @@ public sealed class PostsController(PostsRepository repository, ILogger<PostsCon
             }
 
             // Verify that the user owns the post
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null || existingPost.UserId != Guid.Parse(userId))
             {
                 return Unauthorized("You are not authorized to update this post");
@@ -148,7 +149,7 @@ public sealed class PostsController(PostsRepository repository, ILogger<PostsCon
             }
 
             // Verify that the user owns the post
-            var userId = User.FindFirst("sub")?.Value;
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
             if (userId == null || post.UserId != Guid.Parse(userId))
             {
                 return Unauthorized("You are not authorized to delete this post");
