@@ -2,7 +2,7 @@ import axios from "axios";
 import { TPost, TPostResponse } from "@/common";
 import { TPostSchema } from "../form-schemas/post-schema";
 
-const BACKEND_URL = "https://devspace-backend-iyrj.onrender.com";
+const BACKEND_URL = "http://localhost:5000";
 const POSTS_ENDPOINT = BACKEND_URL + "/api/posts";
 
 function postResponseToObject(post: TPostResponse): TPost {

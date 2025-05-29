@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
 using Server.Repositories;
@@ -58,7 +59,7 @@ public class CommentsController(CommentsRepository repository, ILogger<CommentsC
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult<Post>> GetComment(Guid commentId)
+    public async Task<ActionResult<Comment>> GetComment(Guid commentId)
     {
         try
         {
@@ -74,63 +75,103 @@ public class CommentsController(CommentsRepository repository, ILogger<CommentsC
     }
 
     [HttpPost]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> CreateComment([FromBody] Comment? comment)
     {
-        if (comment == null) return BadRequest("No comment provided.");
+        if (comment == null)
+        {
+            return BadRequest("Comment data is required.");
+        }
 
         try
         {
+            // Get the user ID from the JWT token
+            var userId = User.FindFirst("sub")?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            comment.UserId = Guid.Parse(userId);
             await repository.AddAsync(comment);
             return CreatedAtAction(nameof(GetComment), new { commentId = comment.Id }, comment);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error occurred when creating a new comment");
+            logger.LogError(ex, "Error occurred when creating comment");
             return StatusCode(StatusCodes.Status500InternalServerError,
-                "An unknown error occurred when creating a new comment.");
+                "An unknown error occurred when creating comment");
         }
     }
 
     [HttpPut("{commentId:guid}")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> UpdatePost(Guid commentId, [FromBody] Comment comment)
+    public async Task<ActionResult> UpdateComment(Guid commentId, [FromBody] Comment? comment)
     {
+        if (comment == null)
+        {
+            return BadRequest("Comment data is required.");
+        }
+
         try
         {
             var existingComment = await repository.GetByIdAsync(commentId);
-            if (existingComment == null) return NotFound($"Comment with id '{commentId}' not found.");
+            if (existingComment == null)
+            {
+                return NotFound($"Comment with id '{commentId}' not found.");
+            }
 
-            comment.Body = existingComment.Body;
-            comment.Upvotes = existingComment.Upvotes;
-            existingComment.PublishedAt = DateTime.UtcNow;
+            // Verify that the user owns the comment
+            var userId = User.FindFirst("sub")?.Value;
+            if (userId == null || existingComment.UserId != Guid.Parse(userId))
+            {
+                return Unauthorized("You are not authorized to update this comment");
+            }
 
-            await repository.UpdateAsync(existingComment);
-            return Ok(existingComment);
+            comment.Id = commentId;
+            comment.UserId = existingComment.UserId; // Preserve the original user ID
+            await repository.UpdateAsync(comment);
+            return Ok(comment);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred when updating comment with id '{CommentId}'", commentId);
             return StatusCode(StatusCodes.Status500InternalServerError,
-                $"An unknown error occurred when updating comment with id '{commentId}'.");
+                $"An unknown error occurred when updating comment with id '{commentId}'");
         }
     }
 
     [HttpDelete("{commentId:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> DeletePost(Guid commentId)
+    public async Task<ActionResult> DeleteComment(Guid commentId)
     {
         try
         {
             var comment = await repository.GetByIdAsync(commentId);
-            if (comment == null) return NotFound($"Comment with id '{commentId}' not found.");
+            if (comment == null)
+            {
+                return NotFound($"Comment with id '{commentId}' not found.");
+            }
+
+            // Verify that the user owns the comment
+            var userId = User.FindFirst("sub")?.Value;
+            if (userId == null || comment.UserId != Guid.Parse(userId))
+            {
+                return Unauthorized("You are not authorized to delete this comment");
+            }
 
             await repository.DeleteAsync(comment);
             return NoContent();
@@ -139,7 +180,7 @@ public class CommentsController(CommentsRepository repository, ILogger<CommentsC
         {
             logger.LogError(ex, "Error occurred when deleting comment with id '{CommentId}'", commentId);
             return StatusCode(StatusCodes.Status500InternalServerError,
-                $"An unknown error occurred when deleting the comment with id {commentId}.");
+                $"An unknown error occurred when deleting comment with id '{commentId}'");
         }
     }
 

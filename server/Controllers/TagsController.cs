@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
 using Server.Repositories;
@@ -47,12 +48,17 @@ public sealed class TagsController(TagsRepository repository, ILogger<TagsContro
     }
 
     [HttpPost]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> CreateTag([FromBody] Tag? tag)
     {
-        if (tag == null) return BadRequest("No tag provided.");
+        if (tag == null)
+        {
+            return BadRequest("Tag data is required.");
+        }
 
         try
         {
@@ -61,39 +67,50 @@ public sealed class TagsController(TagsRepository repository, ILogger<TagsContro
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error occurred when creating a new tag");
+            logger.LogError(ex, "Error occurred when creating tag");
             return StatusCode(StatusCodes.Status500InternalServerError,
-                "An unknown error occurred when creating a new tag.");
+                "An unknown error occurred when creating tag");
         }
     }
 
     [HttpPut("{tagId:guid}")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> UpdateTag(Guid tagId, [FromBody] Tag tag)
+    public async Task<ActionResult> UpdateTag(Guid tagId, [FromBody] Tag? tag)
     {
+        if (tag == null)
+        {
+            return BadRequest("Tag data is required.");
+        }
+
         try
         {
             var existingTag = await repository.GetByIdAsync(tagId);
-            if (existingTag == null) return NotFound($"Tag with id '{tagId}' not found.");
+            if (existingTag == null)
+            {
+                return NotFound($"Tag with id '{tagId}' not found.");
+            }
 
-            existingTag.Name = tag.Name;
-
-            await repository.UpdateAsync(existingTag);
-            return Ok(existingTag);
+            tag.Id = tagId;
+            await repository.UpdateAsync(tag);
+            return Ok(tag);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred when updating tag with id '{TagId}'", tagId);
             return StatusCode(StatusCodes.Status500InternalServerError,
-                $"An unknown error occurred when updating tag with id '{tagId}'.");
+                $"An unknown error occurred when updating tag with id '{tagId}'");
         }
     }
 
     [HttpDelete("{tagId:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> DeleteTag(Guid tagId)
@@ -101,16 +118,19 @@ public sealed class TagsController(TagsRepository repository, ILogger<TagsContro
         try
         {
             var tag = await repository.GetByIdAsync(tagId);
-            if (tag == null) return NotFound($"Tag with id '{tagId}' not found.");
+            if (tag == null)
+            {
+                return NotFound($"Tag with id '{tagId}' not found.");
+            }
 
             await repository.DeleteAsync(tag);
-            return NoContent();
+            return Ok();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred when deleting tag with id '{TagId}'", tagId);
             return StatusCode(StatusCodes.Status500InternalServerError,
-                $"An unknown error occurred when deleting the tag with id {tagId}.");
+                $"An unknown error occurred when deleting tag with id '{tagId}'");
         }
     }
 }

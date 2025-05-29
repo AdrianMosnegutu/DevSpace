@@ -1,7 +1,7 @@
 import { TComment, TCommentResponse } from "@/common";
 import axios from "axios";
 
-const BACKEND_URL = "https://devspace-backend-iyrj.onrender.com";
+const BACKEND_URL = "http://localhost:5000";
 const COMMENTS_ENDPOINT = BACKEND_URL + "/api/comments";
 
 function commentResponseToObject(comment: TCommentResponse): TComment {
@@ -20,14 +20,17 @@ export async function serverGetAllComments(): Promise<TComment[]> {
   return commentResponsesToObjects(response.data as TCommentResponse[]);
 }
 
-export async function serverCreateComment(values: { body: string; postId: string }): Promise<TComment> {
+export async function serverCreateComment(values: {
+  body: string;
+  postId: string;
+}): Promise<TComment> {
   const response = await axios.post(COMMENTS_ENDPOINT, values);
   return commentResponseToObject(response.data as TCommentResponse);
 }
 
 export async function serverUpdateComment(
   id: string,
-  values: { body: string }
+  values: { body: string },
 ): Promise<TComment> {
   const response = await axios.put(`${COMMENTS_ENDPOINT}/${id}`, values);
   return commentResponseToObject(response.data as TCommentResponse);

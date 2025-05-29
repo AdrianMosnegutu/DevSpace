@@ -3,9 +3,9 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Server.Models;
 
-public sealed class Post
+public class Post
 {
-    [Key] public Guid Id { get; init; } = Guid.NewGuid();
+    [Key] public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     [MinLength(1)]
@@ -20,7 +20,11 @@ public sealed class Post
     [DataType(DataType.DateTime)]
     public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
 
-    public ICollection<Comment> Comments { get; init; } = [];
+    // User relationship
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
 
-    public ICollection<PostTag> PostTags { get; init; } = [];
+    // Navigation properties
+    public ICollection<Comment> Comments { get; set; } = [];
+    public ICollection<PostTag> PostTags { get; set; } = [];
 }

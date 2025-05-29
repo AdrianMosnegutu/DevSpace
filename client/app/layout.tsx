@@ -1,40 +1,30 @@
+import Navbar from "@/components/Navbar";
+import { AuthProvider } from "@/contexts/AuthContext";
 import type { Metadata } from "next";
-import { Roboto } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import AppSidebar from "@/components/app-sidebar";
-import { Toaster } from "@/components/ui/sonner";
 
-const robotoSans = Roboto({
+const inter = Inter({
   subsets: ["latin"],
 });
 
 export const metadata: Metadata = {
-  title: {
-    default: "DevSpace",
-    template: "%s | DevSpace",
-  },
-  description:
-    "DevSpace is the platform where developers can share their experiences!",
+  title: "Homework App",
+  description: "A simple homework management application",
 };
 
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
-    <html lang="en" className="dark">
-      <body className={`${robotoSans.className} antialiased`}>
-        <SidebarProvider>
-          <AppSidebar />
-          <Toaster position="top-right" />
-
-          <main className="w-full">
-            <SidebarTrigger />
-            {children}
-          </main>
-        </SidebarProvider>
+    <html lang="en">
+      <body className={inter.className}>
+        <AuthProvider>
+          <Navbar />
+          <main className="container mx-auto px-4 py-8">{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );

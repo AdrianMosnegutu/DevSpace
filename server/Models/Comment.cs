@@ -6,7 +6,7 @@ namespace Server.Models;
 
 public class Comment
 {
-    [Key] public Guid Id { get; init; } = Guid.NewGuid();
+    [Key] public Guid Id { get; set; } = Guid.NewGuid();
 
     [Required]
     [MinLength(1)]
@@ -17,11 +17,15 @@ public class Comment
 
     [Column(Order = 0)]
     [ForeignKey(nameof(Post))]
-    public Guid PostId { get; init; }
+    public Guid PostId { get; set; }
 
     [ReadOnly(true)]
     [DataType(DataType.DateTime)]
     public DateTime PublishedAt { get; set; } = DateTime.UtcNow;
 
-    public Post? Post { get; init; }
+    public Post? Post { get; set; }
+
+    // User relationship
+    public Guid UserId { get; set; }
+    public User User { get; set; } = null!;
 }

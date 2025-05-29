@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using Server.Data;
@@ -11,9 +12,11 @@ using Server.Data;
 namespace Server.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250529075858_UpdateUserIdToGuid")]
+    partial class UpdateUserIdToGuid
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -68,7 +71,7 @@ namespace Server.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_comments_user_id");
 
-                    b.ToTable("comments", (string)null);
+                    b.ToTable("Comments", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.Post", b =>
@@ -115,7 +118,7 @@ namespace Server.Migrations
                     b.HasIndex("UserId")
                         .HasDatabaseName("ix_posts_user_id");
 
-                    b.ToTable("posts", (string)null);
+                    b.ToTable("Posts", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.PostTag", b =>
@@ -136,7 +139,7 @@ namespace Server.Migrations
                     b.HasIndex("TagId")
                         .HasDatabaseName("ix_post_tags_tag_id");
 
-                    b.ToTable("post_tags", (string)null);
+                    b.ToTable("PostTags", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.Tag", b =>
@@ -156,7 +159,7 @@ namespace Server.Migrations
                     b.HasKey("Id")
                         .HasName("pk_tags");
 
-                    b.ToTable("tags", (string)null);
+                    b.ToTable("Tags", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.User", b =>
@@ -201,7 +204,7 @@ namespace Server.Migrations
                         .IsUnique()
                         .HasDatabaseName("ix_users_username");
 
-                    b.ToTable("users", (string)null);
+                    b.ToTable("Users", (string)null);
                 });
 
             modelBuilder.Entity("Server.Models.Comment", b =>

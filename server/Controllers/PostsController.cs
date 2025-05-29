@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Server.Models;
 using Server.Repositories;
@@ -55,56 +56,85 @@ public sealed class PostsController(PostsRepository repository, ILogger<PostsCon
     }
 
     [HttpPost]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> CreatePost([FromBody] Post? post)
     {
-        if (post == null) return BadRequest("No post provided.");
+        if (post == null)
+        {
+            return BadRequest("Post data is required.");
+        }
 
         try
         {
+            // Get the user ID from the JWT token
+            var userId = User.FindFirst("sub")?.Value;
+            if (userId == null)
+            {
+                return Unauthorized("User ID not found in token");
+            }
+
+            post.UserId = Guid.Parse(userId);
             await repository.AddAsync(post);
             return CreatedAtAction(nameof(GetPost), new { postId = post.Id }, post);
         }
         catch (Exception ex)
         {
-            logger.LogError(ex, "Error occurred when creating a new post");
+            logger.LogError(ex, "Error occurred when creating post");
             return StatusCode(StatusCodes.Status500InternalServerError,
-                "An unknown error occurred when creating a new post.");
+                "An unknown error occurred when creating post");
         }
     }
 
     [HttpPut("{postId:guid}")]
+    [Authorize]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-    public async Task<ActionResult> UpdatePost(Guid postId, [FromBody] Post post)
+    public async Task<ActionResult> UpdatePost(Guid postId, [FromBody] Post? post)
     {
+        if (post == null)
+        {
+            return BadRequest("Post data is required.");
+        }
+
         try
         {
             var existingPost = await repository.GetByIdAsync(postId);
-            if (existingPost == null) return NotFound($"Post with id '{postId}' not found.");
+            if (existingPost == null)
+            {
+                return NotFound($"Post with id '{postId}' not found.");
+            }
 
-            existingPost.Title = post.Title;
-            existingPost.Body = post.Body;
-            existingPost.Upvotes = post.Upvotes;
-            existingPost.PublishedAt = DateTime.UtcNow;
+            // Verify that the user owns the post
+            var userId = User.FindFirst("sub")?.Value;
+            if (userId == null || existingPost.UserId != Guid.Parse(userId))
+            {
+                return Unauthorized("You are not authorized to update this post");
+            }
 
-            await repository.UpdateAsync(existingPost);
-            return Ok(existingPost);
+            post.Id = postId;
+            post.UserId = existingPost.UserId; // Preserve the original user ID
+            await repository.UpdateAsync(post);
+            return Ok(post);
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred when updating post with id '{PostId}'", postId);
             return StatusCode(StatusCodes.Status500InternalServerError,
-                $"An unknown error occurred when updating post with id '{postId}'.");
+                $"An unknown error occurred when updating post with id '{postId}'");
         }
     }
 
     [HttpDelete("{postId:guid}")]
-    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [Authorize]
+    [ProducesResponseType(StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status401Unauthorized)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<ActionResult> DeletePost(Guid postId)
@@ -112,16 +142,26 @@ public sealed class PostsController(PostsRepository repository, ILogger<PostsCon
         try
         {
             var post = await repository.GetByIdAsync(postId);
-            if (post == null) return NotFound($"Post with id '{postId}' not found.");
+            if (post == null)
+            {
+                return NotFound($"Post with id '{postId}' not found.");
+            }
+
+            // Verify that the user owns the post
+            var userId = User.FindFirst("sub")?.Value;
+            if (userId == null || post.UserId != Guid.Parse(userId))
+            {
+                return Unauthorized("You are not authorized to delete this post");
+            }
 
             await repository.DeleteAsync(post);
-            return NoContent();
+            return Ok();
         }
         catch (Exception ex)
         {
             logger.LogError(ex, "Error occurred when deleting post with id '{PostId}'", postId);
             return StatusCode(StatusCodes.Status500InternalServerError,
-                $"An unknown error occurred when deleting the post with id {postId}.");
+                $"An unknown error occurred when deleting post with id '{postId}'");
         }
     }
 
