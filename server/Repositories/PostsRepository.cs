@@ -25,14 +25,12 @@ public sealed class PostsRepository(AppDbContext context) : GenericRepository<Po
         Expression<Func<Post, TKey>> keySelector,
         bool descending = false)
     {
-        var query = Set
-            .Include(p => p.User);
-
-        query = descending
+        var query = Set.Include(p => p.User);
+        var orderedQuery = descending
             ? query.OrderByDescending(keySelector)
             : query.OrderBy(keySelector);
 
-        return await query.ToListAsync();
+        return await orderedQuery.ToListAsync();
     }
 
     public async Task VoteAsync(Post post, int value)

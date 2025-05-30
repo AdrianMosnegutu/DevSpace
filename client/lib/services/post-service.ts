@@ -1,6 +1,7 @@
 import { TPost, TPostResponse } from "@/common";
 import axios from "@/lib/axios";
 import { TPostSchema } from "../form-schemas/post-schema";
+import { serverApiDelete, serverApiGet, serverApiPatch, serverApiPost } from "../server-api";
 import { serverGetUserById } from "./user-service";
 
 const BACKEND_URL = "http://localhost:5000";
@@ -42,9 +43,14 @@ export async function serverGetPost(id: string): Promise<TPost> {
 }
 
 export async function serverGetAllPosts(): Promise<TPost[]> {
-  const response = await axios.get(`${POSTS_ENDPOINT}`);
-  console.log('Server response:', response.data);
-  return postResponsesToObjects(response.data as TPostResponse[]);
+  try {
+    const response = await serverApiGet<TPostResponse[]>('/api/posts');
+    console.log('Server response:', response);
+    return postResponsesToObjects(response);
+  } catch (error) {
+    console.error('Error fetching posts:', error);
+    return [];
+  }
 }
 
 export async function serverCreatePost(values: TPostSchema): Promise<TPost> {

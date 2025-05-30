@@ -4,8 +4,15 @@ using Server.Models;
 
 namespace Server.Repositories;
 
-public sealed class CommentsRepository(AppDbContext context) : GenericRepository<Comment>(context)
+public sealed class CommentsRepository : GenericRepository<Comment>
 {
+    private readonly AppDbContext _context;
+
+    public CommentsRepository(AppDbContext context) : base(context)
+    {
+        _context = context;
+    }
+
     public async Task VoteAsync(Comment comment, int value)
     {
         comment.Upvotes += value;
@@ -18,7 +25,7 @@ public sealed class CommentsRepository(AppDbContext context) : GenericRepository
 
     public async Task<IEnumerable<Comment>> GetCommentsForPostAsync(Guid postId)
     {
-        return await context.Comments
+        return await _context.Comments
             .Where(c => c.PostId == postId)
             .ToListAsync();
     }

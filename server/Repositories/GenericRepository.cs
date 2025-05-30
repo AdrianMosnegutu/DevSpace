@@ -15,7 +15,7 @@ public class GenericRepository<TEntity>(AppDbContext context) : IRepository<TEnt
         return await Set.ToListAsync();
     }
 
-    public async Task<IEnumerable<TEntity>> GetOrderedByAsync<TKey>(
+    public virtual async Task<IEnumerable<TEntity>> GetOrderedByAsync<TKey>(
         Expression<Func<TEntity, TKey>> keySelector,
         bool descending = false)
     {

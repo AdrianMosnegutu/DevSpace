@@ -2,10 +2,10 @@ import CreatePostButton from "@/components/pages/home/create-post-button";
 import PostsControls from "@/components/pages/home/posts-controls";
 import PostsList from "@/components/pages/home/posts-list";
 import { PostProvider } from "@/contexts/posts-context";
-import { serverGetAllPosts } from "@/lib/services/post-service";
+import { getPosts } from "@/lib/actions/posts";
 
 export default async function HomePage() {
-  const posts = await serverGetAllPosts();
+  const posts = await getPosts();
 
   return (
     <div className="max-w-4xl mx-auto py-8 px-4">

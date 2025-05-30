@@ -1,12 +1,12 @@
-'use client';
+"use client";
 
-import { Button } from '@/components/ui/button';
-import { useAuth } from '@/contexts/AuthContext';
-import { CodeXml, LogOut } from 'lucide-react';
-import Link from 'next/link';
+import { Button } from "@/components/ui/button";
+import { useAuth } from "@/contexts/AuthContext";
+import { CodeXml, LogOut } from "lucide-react";
+import Link from "next/link";
 
 export default function Navbar() {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, logout } = useAuth();
 
   return (
     <nav className="bg-background border-b border-border">
@@ -14,7 +14,10 @@ export default function Navbar() {
         <div className="flex justify-between h-16">
           <div className="flex">
             <div className="flex-shrink-0 flex items-center">
-              <Link href="/" className="flex items-center gap-2 text-xl font-bold text-primary">
+              <Link
+                href="/"
+                className="flex items-center gap-2 text-xl font-bold text-primary"
+              >
                 <CodeXml className="h-6 w-6" />
                 <span>Devspace</span>
               </Link>
@@ -32,7 +35,7 @@ export default function Navbar() {
             {user ? (
               <div className="flex items-center gap-4">
                 <span className="text-sm text-muted-foreground">
-                  {user.email}
+                  {user.username}
                 </span>
                 <Button
                   variant="ghost"
@@ -64,4 +67,4 @@ export default function Navbar() {
       </div>
     </nav>
   );
-} 
+}

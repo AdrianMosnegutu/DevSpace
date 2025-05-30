@@ -55,8 +55,9 @@ public class AuthService : IAuthService
     private AuthResponse GenerateAuthResponse(User user)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ?? throw new InvalidOperationException("JWT Key not configured"));
-        
+        var key = Encoding.ASCII.GetBytes(_configuration["Jwt:Key"] ??
+                throw new InvalidOperationException("JWT Key not configured"));
+
         var tokenDescriptor = new SecurityTokenDescriptor
         {
             Subject = new ClaimsIdentity(new[]
@@ -80,4 +81,4 @@ public class AuthService : IAuthService
             Email: user.Email
         );
     }
-} 
+}
